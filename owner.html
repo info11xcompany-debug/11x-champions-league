@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>11X Champions League</title>
+<title>11X Cash Onam Champions League</title>
 
 <!--
   ============================================================
@@ -22,20 +22,27 @@
 
 <style>
 :root{
-  --ink:#101C2E;          /* ledger ink — headers, numbers */
-  --ink-soft:#2D3E55;
-  --page:#EEF1F5;         /* cool slate page */
+  --ink:#101828;
+  --ink-soft:#25344A;
+
+  --page:#F4F5F7;
   --card:#FFFFFF;
-  --line:#DBE2EA;
-  --brass:#B07D22;        /* points, rank, championship */
-  --brass-tint:#FBF3E2;
-  --jade:#1B7A58;         /* on track */
-  --jade-tint:#E8F4EF;
-  --clay:#B23A22;         /* behind, missed */
-  --clay-tint:#FBECE8;
-  --muted:#6B7A8D;
-  --radius:14px;
-  --shadow:0 1px 2px rgba(16,28,46,.06), 0 8px 24px rgba(16,28,46,.06);
+  --line:#E1E5EA;
+
+  --brass:#D6A02E;
+  --brass-tint:#FFF5D9;
+
+  --jade:#15805D;
+  --jade-tint:#E4F6EF;
+
+  --clay:#D23F31;
+  --clay-tint:#FDECE9;
+
+  --muted:#697586;
+
+  --radius:18px;
+  --shadow:0 2px 6px rgba(16,24,40,.06),
+           0 12px 32px rgba(16,24,40,.08);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -126,15 +133,23 @@ input{font:inherit}
 }
 .field input:focus{outline:none;border-color:var(--brass);box-shadow:0 0 0 3px rgba(176,125,34,.16)}
 .btn{
-  display:block;width:100%;padding:15px;border-radius:12px;
-  background:var(--ink);color:#fff;font-weight:700;font-size:17px;text-align:center;
+  display:block;
+  width:100%;
+  padding:16px 18px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--ink),var(--ink-soft));
+  color:#fff;
+  font-weight:800;
+  font-size:17px;
+  text-align:center;
+  box-shadow:0 8px 18px rgba(16,24,40,.16);
+  transition:transform .15s ease,box-shadow .15s ease;
 }
-.btn:active{transform:translateY(1px)}
-.btn.ghost{background:#fff;color:var(--ink-soft);border:1.5px solid var(--line);font-size:15px;font-weight:600}
-.btn.danger{background:#fff;color:var(--clay);border:1.5px solid var(--clay);font-size:15px}
-.btn[disabled]{opacity:.5;pointer-events:none}
-.btn-row{display:flex;gap:10px;margin-top:12px}
-.btn-row .btn{margin:0}
+
+.btn:active{
+  transform:translateY(2px);
+  box-shadow:0 4px 10px rgba(16,24,40,.14);
+}
 
 /* ---------- metric progress ---------- */
 .metric{padding:13px 0;border-bottom:1px solid var(--line)}
@@ -148,18 +163,100 @@ input{font:inherit}
 .metric-foot{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
 
 /* ---------- leaderboard ---------- */
-.lb-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.lb-row{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
 .lb-row:last-child{border-bottom:none}
 .lb-rank{
-  width:30px;text-align:center;font-weight:800;font-size:17px;
-  font-variant-numeric:tabular-nums;color:var(--muted);flex:none;
+  width:34px;
+  text-align:center;
+  font-weight:800;
+  font-size:17px;
+  line-height:1.1;
+  font-variant-numeric:tabular-nums;
+  color:var(--muted);
+  flex:none;
 }
-.lb-row.top .lb-rank{color:var(--brass)}
-.lb-row.me{background:var(--brass-tint);margin:0 -18px;padding:12px 18px;border-radius:9px}
 .lb-name{flex:1;min-width:0}
-.lb-name b{display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-name b{display:block;font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lb-name span{display:block;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lb-pts{font-weight:800;font-size:17px;font-variant-numeric:tabular-nums;flex:none}
+
+/* Premium Top 3 leaderboard cards */
+.lb-row.rank-1,
+.lb-row.rank-2,
+.lb-row.rank-3{
+  margin:8px 0;
+  padding:14px 12px;
+  border:1px solid transparent;
+  border-radius:14px;
+  box-shadow:0 8px 20px rgba(16,24,40,.07);
+}
+
+.lb-row.rank-1{
+  background:linear-gradient(100deg,#FFF0B8 0%,#FFF8E5 55%,#FFFFFF 100%);
+  border-color:#E2B84B;
+}
+.lb-row.rank-2{
+  background:linear-gradient(100deg,#E9EDF2 0%,#F7F8FA 55%,#FFFFFF 100%);
+  border-color:#B8C0CB;
+}
+.lb-row.rank-3{
+  background:linear-gradient(100deg,#F3D4BF 0%,#FBEEE5 55%,#FFFFFF 100%);
+  border-color:#C88B61;
+}
+
+.lb-row.rank-1 .lb-rank,
+.lb-row.rank-2 .lb-rank,
+.lb-row.rank-3 .lb-rank{
+  width:40px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  font-size:11px;
+}
+
+.lb-row.rank-1 .lb-rank::before{content:"🥇";font-size:24px;line-height:1}
+.lb-row.rank-2 .lb-rank::before{content:"🥈";font-size:24px;line-height:1}
+.lb-row.rank-3 .lb-rank::before{content:"🥉";font-size:24px;line-height:1}
+
+.lb-row.rank-1 .lb-rank,
+.lb-row.rank-1 .lb-pts{color:#8B6100}
+.lb-row.rank-2 .lb-rank,
+.lb-row.rank-2 .lb-pts{color:#596575}
+.lb-row.rank-3 .lb-rank,
+.lb-row.rank-3 .lb-pts{color:#8A4F2A}
+
+.lb-row.rank-1 .lb-name b{font-size:16px}
+
+/* Logged-in owner highlight — works even when the owner is in the Top 3 */
+.lb-row.me{
+  outline:2px solid var(--ink);
+  outline-offset:2px;
+  box-shadow:inset 4px 0 0 var(--ink),0 8px 20px rgba(16,24,40,.10);
+}
+.lb-row.me:not(.rank-1):not(.rank-2):not(.rank-3){
+  background:var(--brass-tint);
+  margin:6px 0;
+  padding:13px 12px;
+  border-radius:12px;
+}
+
+@media (hover:hover){
+  .lb-row.rank-1:hover,
+  .lb-row.rank-2:hover,
+  .lb-row.rank-3:hover{
+    transform:translateY(-1px);
+  }
+}
 .champion{
   background:var(--ink);color:#fff;border-radius:var(--radius);padding:18px;margin-bottom:14px;
   box-shadow:var(--shadow);
@@ -199,25 +296,186 @@ input{font:inherit}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 :focus-visible{outline:2.5px solid var(--brass);outline-offset:2px}
+
+/* ==========================================================
+   11X IMAGE BRANDING — logo + soft event-photo backgrounds
+   ========================================================== */
+#loginView{
+  position:relative;
+  isolation:isolate;
+  max-width:none;
+  min-height:100vh;
+  margin:0;
+  padding:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+#loginView::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background:
+    url("assets/third-background.webp") center center / cover no-repeat;
+  filter:saturate(.82) contrast(.94);
+  transform:scale(1.015);
+}
+#loginView::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    linear-gradient(135deg,rgba(244,247,251,.93),rgba(255,255,255,.76)),
+    linear-gradient(180deg,rgba(16,24,40,.10),rgba(255,255,255,.20));
+  backdrop-filter:blur(2px);
+}
+.login-card{
+  width:min(100%,430px);
+  padding:30px 26px 26px;
+  border-radius:26px;
+  background:rgba(255,255,255,.90);
+  border:1px solid rgba(255,255,255,.86);
+  box-shadow:0 24px 70px rgba(16,24,40,.22);
+  backdrop-filter:blur(16px);
+}
+.login-brand{
+  display:flex;
+  justify-content:center;
+  margin-bottom:15px;
+}
+.login-logo{
+  width:100px;
+  height:100px;
+  object-fit:contain;
+  border-radius:22px;
+  background:rgba(255,255,255,.96);
+  padding:8px;
+  box-shadow:0 12px 30px rgba(16,24,40,.14);
+}
+.login-card h1{
+  text-align:center;
+  margin-bottom:7px;
+}
+.login-card p{
+  text-align:center;
+}
+.login-card .btn.ghost{
+  background:rgba(255,255,255,.78);
+}
+
+#appView{
+  position:relative;
+  isolation:isolate;
+  min-height:100vh;
+  overflow:hidden;
+}
+#appView::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background:url("assets/third-background.webp") center center / cover no-repeat;
+  filter:saturate(.75) contrast(.92);
+  transform:scale(1.015);
+}
+#appView::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    linear-gradient(180deg,rgba(244,247,251,.93),rgba(244,247,251,.84)),
+    rgba(255,255,255,.34);
+  backdrop-filter:blur(2px);
+}
+#appView .wrap{
+  position:relative;
+  z-index:1;
+}
+#appView .card{
+  background:rgba(255,255,255,.91);
+  border:1px solid rgba(255,255,255,.78);
+  backdrop-filter:blur(13px);
+}
+#appView .top{
+  background:rgba(16,24,40,.94);
+  backdrop-filter:blur(16px);
+  box-shadow:0 10px 28px rgba(16,24,40,.15);
+}
+.brand-logo{
+  width:46px;
+  height:46px;
+  flex:none;
+  object-fit:contain;
+  border-radius:12px;
+  padding:4px;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 7px 18px rgba(0,0,0,.18);
+}
+#appView .tabs{
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(15px);
+  box-shadow:0 -8px 24px rgba(16,24,40,.08);
+}
+
+/* Restore distinct secondary and danger buttons */
+.btn.ghost{
+  background:rgba(255,255,255,.90);
+  color:var(--ink-soft);
+  border:1.5px solid var(--line);
+  box-shadow:none;
+  font-size:15px;
+  font-weight:700;
+}
+.btn.danger{
+  background:rgba(255,255,255,.90);
+  color:var(--clay);
+  border:1.5px solid var(--clay);
+  box-shadow:none;
+  font-size:15px;
+}
+.btn-row{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
+.btn-row .btn{margin:0}
+
+@media (max-width:480px){
+  #loginView{padding:16px}
+  .login-card{padding:24px 18px 20px;border-radius:22px}
+  .login-logo{width:88px;height:88px}
+  .brand-logo{width:42px;height:42px}
+}
+
 </style>
 </head>
 <body data-lang="ml">
 
 <!-- ============ LOGIN ============ -->
 <div id="loginView" class="login">
-  <h1 id="loginTitle">11X ചാമ്പ്യൻസ് ലീഗ്</h1>
+  <div class="login-card">
+    <div class="login-brand">
+      <img class="login-logo" src="assets/11x-logo.png" alt="11X Company logo">
+    </div>
+  <h1 id="loginTitle">11X Cash Onam Championship</h1>
   <p id="loginSub">നിങ്ങളുടെ ദിവസേനയുള്ള കണക്ക്. നിങ്ങളുടെ സ്ഥാനം.</p>
   <div id="loginMsg"></div>
   <input id="username" placeholder="Username" autocomplete="username" autocapitalize="off" spellcheck="false">
   <input id="password" type="password" placeholder="Password" autocomplete="current-password">
   <button class="btn" onclick="doLogin()" id="loginBtn">Sign in</button>
   <button class="btn ghost" style="margin-top:10px" onclick="toggleLang()">English / മലയാളം</button>
+  </div>
 </div>
 
 <!-- ============ APP ============ -->
 <div id="appView" class="hide">
   <div class="top">
     <div class="top-row">
+      <img class="brand-logo" src="assets/11x-logo.png" alt="11X Company">
       <div class="who"><b id="hName"></b><span id="hBiz"></span></div>
       <span class="chip" id="hCircle"></span>
       <button class="langbtn" onclick="toggleLang()" id="hLang">EN</button>
@@ -285,9 +543,9 @@ var T = {
   },
   en:{
     signin:"Sign in", signingin:"Signing in…",
-    tagline:"Your numbers, every day. Your place on the board.",
+    tagline:"Track Today. Lead Tomorrow.",
     today:"Today", board:"Standings", me:"Me",
-    todayNumbers:"Today's numbers", saveToday:"Save today's numbers",
+    todayNumbers:"Today's Business Performance", saveToday:"Save today's numbers",
     saved:"Saved", saving:"Saving…",
     edit:"Edit", shopClosed:"Shop closed today",
     closedConfirm:"Mark the shop closed today? You get {n} closed days a month.",
@@ -714,8 +972,10 @@ function renderBoard(){
     html += '<div class="card"><h2>' + esc(name) + '</h2>';
     if (!c.rows.length) { html += '<div class="empty">—</div></div>'; return; }
     c.rows.forEach(function(r, i){
-      html += '<div class="lb-row' + (i === 0 ? ' top' : '') + (r.user_id === me ? ' me' : '') + '">' +
-        '<span class="lb-rank">' + (r.circle_rank || (i + 1)) + '</span>' +
+      var rank = Number(r.circle_rank || (i + 1));
+      var rankClass = rank >= 1 && rank <= 3 ? (' rank-' + rank) : '';
+      html += '<div class="lb-row' + rankClass + (r.user_id === me ? ' me' : '') + '">' +
+        '<span class="lb-rank">' + rank + '</span>' +
         '<span class="lb-name"><b>' + esc(r.name) + '</b><span>' + esc(r.business_name) + '</span></span>' +
         '<span class="lb-pts">' + Math.round(r.total_points) + '</span></div>';
     });
@@ -725,8 +985,10 @@ function renderBoard(){
   if (b.all_time && b.all_time.length) {
     html += '<div class="card"><h2>' + esc(t('allTime')) + '</h2>';
     b.all_time.slice(0, 10).forEach(function(r, i){
-      html += '<div class="lb-row' + (i === 0 ? ' top' : '') + (r.user_id === me ? ' me' : '') + '">' +
-        '<span class="lb-rank">' + (i + 1) + '</span>' +
+      var rank = i + 1;
+      var rankClass = rank <= 3 ? (' rank-' + rank) : '';
+      html += '<div class="lb-row' + rankClass + (r.user_id === me ? ' me' : '') + '">' +
+        '<span class="lb-rank">' + rank + '</span>' +
         '<span class="lb-name"><b>' + esc(r.name) + '</b><span>' + esc(r.circle_key) +
           ' · ' + r.cycles + ' ' + esc(t('months')) + '</span></span>' +
         '<span class="lb-pts">' + Math.round(r.total_points) + '</span></div>';
