@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11X Championship — Admin</title>
+
+<!--
+  ============================================================
+  THE ONLY LINE YOU NEED TO EDIT IN THIS FILE
+  Paste the same Apps Script Web App URL used in owner.html.
+  ============================================================
+-->
+<script>
+  var API_URL = "https://script.google.com/macros/s/AKfycbzSNy72nLm-X_KgoXuBhdZywvTnplg9zocqHH42I_Tj3Rbm3Qs_7raVsscAjhKT5EGY_A/exec";
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#101C2E;--ink-soft:#2D3E55;--page:#EEF1F5;--card:#fff;--line:#DBE2EA;
+  --brass:#B07D22;--brass-tint:#FBF3E2;--jade:#1B7A58;--jade-tint:#E8F4EF;
+  --clay:#B23A22;--clay-tint:#FBECE8;--muted:#6B7A8D;--shadow:0 1px 2px rgba(16,28,46,.06),0 8px 24px rgba(16,28,46,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:'Anek Latin',system-ui,sans-serif;font-size:15px}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font:inherit}
+.hide{display:none !important}
+a{color:var(--brass)}
+
+.top{background:var(--ink);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:20}
+.top b{font-size:17px;font-weight:700}
+.top .sp{flex:1}
+.top .cyc{font-size:13px;color:#9FB0C4}
+.nav{display:flex;gap:4px;padding:0 24px;background:var(--ink);position:sticky;top:52px;z-index:19}
+.nav button{padding:9px 15px;font-size:14px;font-weight:600;color:#9FB0C4;border-radius:9px 9px 0 0}
+.nav button.on{color:var(--ink);background:var(--page)}
+.wrap{padding:22px 24px 80px;max-width:1240px;margin:0 auto}
+
+.card{background:var(--card);border-radius:13px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+.card h2{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.stat b{display:block;font-size:33px;font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.stat.alert b{color:var(--clay)}
+
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--page);color:var(--ink-soft);white-space:nowrap}
+.tag.g{background:var(--jade-tint);color:var(--jade)}
+.tag.r{background:var(--clay-tint);color:var(--clay)}
+.tag.y{background:var(--brass-tint);color:#7A5510}
+
+.btn{padding:9px 15px;border-radius:9px;background:var(--ink);color:#fff;font-weight:600;font-size:14px}
+.btn.sm{padding:5px 11px;font-size:13px;border-radius:7px}
+.btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--ink-soft)}
+.btn.good{background:var(--jade)}
+.btn.bad{background:#fff;border:1.5px solid var(--clay);color:var(--clay)}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.field input,.field select{width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;background:#fff}
+.field input:focus,.field select:focus{outline:none;border-color:var(--brass)}
+.inline{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+
+.msg{padding:11px 13px;border-radius:9px;font-size:14px;margin-bottom:12px}
+.msg.err{background:var(--clay-tint);color:var(--clay)}
+.msg.ok{background:var(--jade-tint);color:var(--jade)}
+.msg.warn{background:var(--brass-tint);color:#7A5510}
+.empty{text-align:center;color:var(--muted);padding:26px}
+.mono{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px}
+
+.login{max-width:360px;margin:14vh auto;padding:24px}
+.login h1{font-size:26px;margin:0 0 20px}
+.login input{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:9px;margin-bottom:10px}
+.modal{position:fixed;inset:0;background:rgba(16,28,46,.5);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px}
+.modal .card{max-width:520px;width:100%;max-height:86vh;overflow:auto;margin:0}
+:focus-visible{outline:2.5px solid var(--brass);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<div id="loginView" class="login">
+  <h1>11X Championship — Admin</h1>
+  <div id="loginMsg"></div>
+  <input id="username" placeholder="Username" autocapitalize="off">
+  <input id="password" type="password" placeholder="Password">
+  <button class="btn" style="width:100%" onclick="doLogin()">Sign in</button>
+</div>
+
+<div id="appView" class="hide">
+  <div class="top">
+    <b>11X Championship</b>
+    <span class="cyc" id="cycLabel"></span>
+    <span class="sp"></span>
+    <button class="btn ghost sm" onclick="recompute()">Recompute now</button>
+    <button class="btn ghost sm" onclick="doLogout()">Sign out</button>
+  </div>
+  <div class="nav">
+    <button id="nOverview" class="on" onclick="go('overview')">Overview</button>
+    <button id="nOwners" onclick="go('owners')">Owners</button>
+    <button id="nTargets" onclick="go('targets')">Target approvals</button>
+    <button id="nNudges" onclick="go('nudges')">Today's nudges</button>
+    <button id="nConfig" onclick="go('config')">Scoring rules</button>
+    <button id="nCycles" onclick="go('cycles')">Cycles</button>
+  </div>
+  <div class="wrap" id="page"></div>
+</div>
+<div id="modal"></div>
+
+<script>
+var S = { token:null, page:'overview', cache:{} };
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function num(n){ return (Number(n)||0).toLocaleString('en-IN',{maximumFractionDigits:0}); }
+
+function api(action, payload){
+  return fetch(API_URL,{
+    method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(Object.assign({action:action,token:S.token},payload||{}))
+  }).then(function(r){return r.json();}).then(function(res){
+    if(!res.ok) throw new Error(res.error||'ERROR');
+    return res.data;
+  });
+}
+
+/* ---------------- auth ---------------- */
+function doLogin(){
+  api('login',{username:$('username').value.trim(),password:$('password').value})
+    .then(function(d){
+      if(d.user.role!=='ADMIN'){ throw new Error('This login is not an admin account.'); }
+      S.token=d.token; localStorage.setItem('adminToken',d.token);
+      $('loginView').classList.add('hide'); $('appView').classList.remove('hide');
+      go('overview');
+    })
+    .catch(function(e){ $('loginMsg').innerHTML='<div class="msg err">'+esc(e.message)+'</div>'; });
+}
+function doLogout(){ api('logout',{}).catch(function(){}); localStorage.removeItem('adminToken'); location.reload(); }
+
+function go(page){
+  S.page=page;
+  ['overview','owners','targets','nudges','config','cycles'].forEach(function(p){
+    $('n'+p[0].toUpperCase()+p.slice(1)).classList.toggle('on',p===page);
+  });
+  $('page').innerHTML='<div class="empty">Loading…</div>';
+  ({overview:pageOverview,owners:pageOwners,targets:pageTargets,
+    nudges:pageNudges,config:pageConfig,cycles:pageCycles})[page]();
+}
+function fail(e){
+  if(e.message==='NO_SESSION'||e.message==='SESSION_EXPIRED'){ localStorage.removeItem('adminToken'); location.reload(); return; }
+  $('page').innerHTML='<div class="card"><div class="msg err">'+esc(e.message)+'</div></div>';
+}
+
+/* ---------------- overview ---------------- */
+function pageOverview(){
+  api('adminOverview',{}).then(function(d){
+    S.cache.overview=d;
+    $('cycLabel').textContent = d.cycle ? (d.cycle.label+' · day '+d.cycle.day_of_cycle+' of '+d.cycle.total_days) : 'No open cycle';
+    var pct = d.owners_active ? Math.round(d.entered_today/d.owners_active*100) : 0;
+    var problems = d.config_problems.length
+      ? '<div class="card"><h2>Configuration problems</h2><div class="msg err">• '+
+        d.config_problems.map(esc).join('<br>• ')+'</div></div>' : '';
+    var noCycle = d.cycle ? '' :
+      '<div class="card"><div class="msg warn">No cycle is open. Owners cannot enter anything until you open one under Cycles.</div></div>';
+
+    $('page').innerHTML = noCycle + problems +
+      '<div class="card"><h2>Today</h2><div class="grid">'+
+        '<div class="stat"><b>'+d.owners_active+'</b><span>Active owners</span></div>'+
+        '<div class="stat"><b>'+d.entered_today+'</b><span>Entered today ('+pct+'%)</span></div>'+
+        '<div class="stat'+(d.owners_active-d.entered_today>0?' alert':'')+'"><b>'+
+          Math.max(0,d.owners_active-d.entered_today)+'</b><span>Still to enter</span></div>'+
+        '<div class="stat'+(d.pending_target_approvals>0?' alert':'')+'"><b>'+
+          d.pending_target_approvals+'</b><span>Targets awaiting approval</span></div>'+
+      '</div></div>';
+  }).catch(fail);
+}
+
+/* ---------------- owners ---------------- */
+function pageOwners(){
+  Promise.all([api('adminListUsers',{}),api('adminGetConfig',{})]).then(function(r){
+    var users=r[0], circles=r[1].circles.filter(function(c){return String(c.active).toUpperCase()==='TRUE';});
+    S.cache.circles=circles;
+
+    var rows=users.map(function(u){
+      return '<tr><td><b>'+esc(u.name)+'</b><br><span style="color:var(--muted);font-size:13px">'+esc(u.business_name)+'</span></td>'+
+        '<td class="mono">'+esc(u.username)+'</td>'+
+        '<td><span class="tag">'+esc(u.circle_key)+'</span></td>'+
+        '<td class="num">'+(u.total_points==null?'—':Math.round(u.total_points))+'</td>'+
+        '<td class="num">'+(u.overall_rank||'—')+'</td>'+
+        '<td class="num">'+(u.missed_days==null?'—':'<span class="tag '+(u.missed_days>0?'r':'g')+'">'+u.missed_days+'</span>')+'</td>'+
+        '<td><span class="tag '+(u.status==='ACTIVE'?'g':'r')+'">'+esc(u.status)+'</span></td>'+
+        '<td class="row">'+
+          '<button class="btn ghost sm" onclick="resetPw(\''+u.user_id+'\')">Reset password</button>'+
+          '<button class="btn ghost sm" onclick="moveCircle(\''+u.user_id+'\',\''+esc(u.name)+'\',\''+u.circle_key+'\')">Move circle</button>'+
+        '</td></tr>';
+    }).join('');
+
+    $('page').innerHTML =
+      '<div class="card"><h2>Add an owner</h2><div class="inline">'+
+        '<div class="field"><label>Name</label><input id="nName"></div>'+
+        '<div class="field"><label>Business name</label><input id="nBiz"></div>'+
+        '<div class="field"><label>Phone (10 digits)</label><input id="nPhone" inputmode="numeric"></div>'+
+        '<div class="field"><label>Username</label><input id="nUser" autocapitalize="off"></div>'+
+        '<div class="field"><label>Circle</label><select id="nCircle">'+
+          circles.map(function(c){return '<option value="'+esc(c.circle_key)+'">'+esc(c.name_en)+'</option>';}).join('')+
+        '</select></div>'+
+        '<div class="field"><label>Join date</label><input id="nJoin" type="date"></div>'+
+      '</div><div id="newMsg"></div><button class="btn" onclick="createUser()">Create and show password</button></div>'+
+      '<div class="card"><h2>'+users.length+' owners</h2><table><thead><tr>'+
+        '<th>Owner</th><th>Username</th><th>Circle</th><th class="num">Points</th><th class="num">Rank</th>'+
+        '<th class="num">Missed</th><th>Status</th><th></th></tr></thead><tbody>'+
+        (rows||'<tr><td colspan="8" class="empty">No owners yet.</td></tr>')+'</tbody></table></div>';
+  }).catch(fail);
+}
+
+function createUser(){
+  api('adminCreateUser',{
+    name:$('nName').value, business_name:$('nBiz').value, phone:$('nPhone').value,
+    username:$('nUser').value, circle_key:$('nCircle').value, join_date:$('nJoin').value||undefined
+  }).then(function(d){
+    $('newMsg').innerHTML='<div class="msg ok"><b>Created.</b> Username <span class="mono">'+esc(d.username)+
+      '</span> · Password <span class="mono">'+esc(d.password)+'</span><br>'+
+      'This password is shown once. '+(d.whatsapp_link?'<a href="'+d.whatsapp_link+'" target="_blank">Send it on WhatsApp</a>':'')+'</div>';
+    ['nName','nBiz','nPhone','nUser'].forEach(function(i){$(i).value='';});
+  }).catch(function(e){ $('newMsg').innerHTML='<div class="msg err">'+esc(e.message)+'</div>'; });
+}
+
+function resetPw(userId){
+  if(!confirm('Reset this password? The old one stops working immediately.')) return;
+  api('adminResetPassword',{user_id:userId}).then(function(d){
+    modal('<h2>New password</h2><div class="msg ok">Username <span class="mono">'+esc(d.username)+
+      '</span><br>Password <span class="mono">'+esc(d.password)+'</span></div>'+
+      (d.whatsapp_link?'<a class="btn" style="display:inline-block" href="'+d.whatsapp_link+'" target="_blank">Send on WhatsApp</a> ':'')+
+      '<button class="btn ghost" onclick="closeModal()">Close</button>');
+  }).catch(function(e){ alert(e.message); });
+}
+
+function moveCircle(userId,name,current){
+  var opts=S.cache.circles.map(function(c){
+    return '<option value="'+esc(c.circle_key)+'"'+(c.circle_key===current?' selected':'')+'>'+esc(c.name_en)+'</option>';
+  }).join('');
+  modal('<h2>Move '+esc(name)+'</h2>'+
+    '<div class="field"><label>New circle</label><select id="mvCircle">'+opts+'</select></div>'+
+    '<div class="field"><label>How to apply</label><select id="mvMode">'+
+      '<option value="NEXT_CYCLE">From next cycle — this month is untouched (recommended)</option>'+
+      '<option value="NOW_CARRY">Now, points travel with them</option>'+
+      '<option value="NOW_RESET">Now, this month\'s entries are deleted</option>'+
+    '</select></div>'+
+    '<div class="field"><label>Reason (written to the audit log)</label><input id="mvReason"></div>'+
+    '<div class="row"><button class="btn" onclick="doMove(\''+userId+'\')">Apply</button>'+
+    '<button class="btn ghost" onclick="closeModal()">Cancel</button></div>');
+}
+function doMove(userId){
+  var mode=$('mvMode').value;
+  if(mode==='NOW_RESET'&&!confirm('This deletes every entry this owner made this cycle. Continue?')) return;
+  api('adminMoveCircle',{user_id:userId,circle_key:$('mvCircle').value,mode:mode,reason:$('mvReason').value})
+    .then(function(){ closeModal(); go('owners'); }).catch(function(e){ alert(e.message); });
+}
+
+/* ---------------- target approvals ---------------- */
+function pageTargets(){
+  Promise.all([api('adminListTargets',{}),api('adminGetConfig',{})]).then(function(r){
+    var list=r[0], metrics=r[1].metrics;
+    var labelOf={}; metrics.forEach(function(m){ labelOf[m.metric_key]=m.label_en; });
+
+    var pending=list.filter(function(x){return x.status==='PROPOSED';});
+    var decided=list.filter(function(x){return x.status!=='PROPOSED';});
+
+    var cards=pending.map(function(u){
+      var fields=u.targets.map(function(tg){
+        return '<div class="field"><label>'+esc(labelOf[tg.metric_key]||tg.metric_key)+'</label>'+
+          '<input id="ov_'+u.user_id+'_'+tg.metric_key+'" type="number" value="'+tg.target_value+'"></div>';
+      }).join('');
+      return '<div class="card"><h2>'+esc(u.name)+' · '+esc(u.circle_key)+'</h2>'+
+        '<p style="color:var(--muted);margin:0 0 12px">'+esc(u.business_name)+
+        '  ·  You can change a number before approving.</p>'+
+        '<div class="inline">'+fields+'</div>'+
+        '<div class="row"><button class="btn good" onclick="decide(\''+u.user_id+'\',\'APPROVED\')">Approve and lock</button>'+
+        '<button class="btn bad" onclick="decide(\''+u.user_id+'\',\'REJECTED\')">Send back</button></div></div>';
+    }).join('');
+
+    var table=decided.map(function(u){
+      return '<tr><td>'+esc(u.name)+'</td><td><span class="tag">'+esc(u.circle_key)+'</span></td>'+
+        '<td><span class="tag '+(u.status==='APPROVED'?'g':'r')+'">'+esc(u.status)+'</span></td>'+
+        '<td>'+u.targets.map(function(tg){
+          return esc(labelOf[tg.metric_key]||tg.metric_key)+' '+num(tg.target_value);
+        }).join(' · ')+'</td></tr>';
+    }).join('');
+
+    $('page').innerHTML=(cards||'<div class="card"><div class="empty">Nothing waiting for approval.</div></div>')+
+      '<div class="card"><h2>Decided</h2><table><thead><tr><th>Owner</th><th>Circle</th><th>Status</th><th>Targets</th></tr></thead>'+
+      '<tbody>'+(table||'<tr><td colspan="4" class="empty">—</td></tr>')+'</tbody></table></div>';
+  }).catch(fail);
+}
+
+function decide(userId,decision){
+  var overrides={};
+  document.querySelectorAll('[id^="ov_'+userId+'_"]').forEach(function(el){
+    overrides[el.id.replace('ov_'+userId+'_','')]=Number(el.value)||0;
+  });
+  api('adminDecideTargets',{user_id:userId,decision:decision,overrides:overrides})
+    .then(function(){ go('targets'); }).catch(function(e){ alert(e.message); });
+}
+
+/* ---------------- nudges ---------------- */
+function pageNudges(){
+  api('adminDefaulters',{}).then(function(list){
+    var rows=list.map(function(u){
+      return '<tr><td><b>'+esc(u.name)+'</b><br><span style="color:var(--muted);font-size:13px">'+esc(u.business_name)+'</span></td>'+
+        '<td><span class="tag">'+esc(u.circle_key)+'</span></td><td class="mono">'+esc(u.phone)+'</td>'+
+        '<td>'+(u.whatsapp_link
+          ? '<a class="btn sm" style="display:inline-block;text-decoration:none;color:#fff" href="'+u.whatsapp_link+'" target="_blank">Send WhatsApp</a>'
+          : '<span class="tag r">No phone number</span>')+'</td></tr>';
+    }).join('');
+    $('page').innerHTML='<div class="card"><h2>'+list.length+' owners have not entered today</h2>'+
+      '<p style="color:var(--muted);margin:0 0 14px">Each button opens WhatsApp with the message already written. '+
+      'Set the message text and the app link under Scoring rules → Settings.</p>'+
+      '<table><thead><tr><th>Owner</th><th>Circle</th><th>Phone</th><th></th></tr></thead><tbody>'+
+      (rows||'<tr><td colspan="4" class="empty">Everyone has entered today.</td></tr>')+'</tbody></table></div>';
+  }).catch(fail);
+}
+
+/* ---------------- config ---------------- */
+function pageConfig(){
+  api('adminGetConfig',{}).then(function(d){
+    S.cache.config=d;
+    var problems=d.problems.length
+      ? '<div class="card"><h2>Problems</h2><div class="msg err">• '+d.problems.map(esc).join('<br>• ')+'</div></div>'
+      : '<div class="card"><div class="msg ok">Configuration is valid.</div></div>';
+
+    var metricRows=d.metrics.map(function(m,i){
+      return '<tr><td class="mono">'+esc(m.metric_key)+'</td><td>'+esc(m.label_en)+'</td>'+
+        '<td>'+esc(m.type)+'</td><td class="mono">'+esc(m.formula||'—')+'</td>'+
+        '<td class="num">'+esc(m.weight)+'</td>'+
+        '<td>'+(String(m.scored).toUpperCase()==='TRUE'?'<span class="tag g">scored</span>':'<span class="tag">display</span>')+'</td>'+
+        '<td>'+(String(m.active).toUpperCase()==='TRUE'?'<span class="tag g">on</span>':'<span class="tag r">off</span>')+'</td>'+
+        '<td><button class="btn ghost sm" onclick="editMetric('+i+')">Edit</button></td></tr>';
+    }).join('');
+
+    var settingRows=d.settings.map(function(s){
+      return '<tr><td class="mono">'+esc(s.key)+'</td>'+
+        '<td><input id="set_'+esc(s.key)+'" value="'+esc(s.value)+'" style="width:100%;padding:6px 9px;border:1.5px solid var(--line);border-radius:7px"></td>'+
+        '<td style="color:var(--muted);font-size:13px">'+esc(s.notes)+'</td>'+
+        '<td><button class="btn ghost sm" onclick="saveSetting(\''+esc(s.key)+'\')">Save</button></td></tr>';
+    }).join('');
+
+    $('page').innerHTML=problems+
+      '<div class="card"><div class="msg warn">Changes here apply to the <b>next</b> cycle you open. '+
+      'The running cycle keeps the rules it was opened with — that is deliberate, so nobody\'s rank moves overnight.</div></div>'+
+      '<div class="card"><h2>Metrics</h2><table><thead><tr><th>Key</th><th>Label</th><th>Type</th><th>Formula</th>'+
+        '<th class="num">Weight</th><th>Use</th><th>Active</th><th></th></tr></thead><tbody>'+metricRows+'</tbody></table>'+
+        '<div class="row" style="margin-top:14px"><button class="btn" onclick="editMetric(-1)">Add a metric</button></div></div>'+
+      '<div class="card"><h2>Settings</h2><table><thead><tr><th>Setting</th><th>Value</th><th>What it does</th><th></th></tr></thead>'+
+        '<tbody>'+settingRows+'</tbody></table></div>';
+  }).catch(fail);
+}
+
+function saveSetting(key){
+  api('adminSaveSetting',{key:key,value:$('set_'+key).value})
+    .then(function(){ go('config'); }).catch(function(e){ alert(e.message); });
+}
+
+function editMetric(index){
+  var m = index>=0 ? S.cache.config.metrics[index] : {
+    metric_key:'',label_en:'',label_ml:'',type:'INPUT',formula:'',unit:'COUNT',
+    weight:0,direction:'HIGH',prorate:'TRUE',scored:'TRUE',has_target:'TRUE',
+    display_order:99,active:'TRUE',cap_override:''
+  };
+  var sel=function(id,label,value,options){
+    return '<div class="field"><label>'+label+'</label><select id="'+id+'">'+
+      options.map(function(o){
+        return '<option value="'+o+'"'+(String(value).toUpperCase()===o?' selected':'')+'>'+o+'</option>';
+      }).join('')+'</select></div>';
+  };
+  modal('<h2>'+(index>=0?'Edit metric':'New metric')+'</h2>'+
+    '<div class="field"><label>Key — used in formulas, never change it after a cycle has started</label>'+
+      '<input id="m_key" class="mono" value="'+esc(m.metric_key)+'"'+(index>=0?' readonly':'')+'></div>'+
+    '<div class="inline">'+
+      '<div class="field"><label>English label</label><input id="m_en" value="'+esc(m.label_en)+'"></div>'+
+      '<div class="field"><label>Malayalam label</label><input id="m_ml" value="'+esc(m.label_ml)+'"></div>'+
+    '</div>'+
+    '<div class="inline">'+
+      sel('m_type','Type — INPUT is typed daily, DERIVED is calculated',m.type,['INPUT','DERIVED','SYSTEM'])+
+      sel('m_unit','Unit',m.unit,['COUNT','CURRENCY','PERCENT','RATIO'])+
+    '</div>'+
+    '<div class="field"><label>Formula — only for DERIVED. Example: {revenue}/{txn_count}</label>'+
+      '<input id="m_formula" class="mono" value="'+esc(m.formula)+'" oninput="checkFormula()">'+
+      '<div id="fCheck" style="margin-top:7px;font-size:13px"></div></div>'+
+    '<div class="inline">'+
+      '<div class="field"><label>Weight %</label><input id="m_weight" type="number" value="'+esc(m.weight)+'"></div>'+
+      '<div class="field"><label>Display order</label><input id="m_order" type="number" value="'+esc(m.display_order)+'"></div>'+
+      '<div class="field"><label>Cap override (blank = use global)</label><input id="m_cap" type="number" value="'+esc(m.cap_override)+'"></div>'+
+    '</div>'+
+    '<div class="inline">'+
+      sel('m_dir','Better when',m.direction,['HIGH','LOW'])+
+      sel('m_prorate','Pro-rate the target',m.prorate,['TRUE','FALSE'])+
+      sel('m_scored','Counts towards score',m.scored,['TRUE','FALSE'])+
+      sel('m_target','Owner sets a target',m.has_target,['TRUE','FALSE'])+
+      sel('m_active','Active',m.active,['TRUE','FALSE'])+
+    '</div>'+
+    '<div id="mMsg"></div>'+
+    '<div class="row"><button class="btn" onclick="saveMetric()">Save metric</button>'+
+    '<button class="btn ghost" onclick="closeModal()">Cancel</button></div>');
+  checkFormula();
+}
+
+function checkFormula(){
+  var f=$('m_formula').value.trim();
+  if(!f||$('m_type').value!=='DERIVED'){ $('fCheck').innerHTML=''; return; }
+  api('adminTestFormula',{formula:f}).then(function(r){
+    $('fCheck').innerHTML = r.ok
+      ? '<span style="color:var(--jade)">Valid. With test values '+
+        Object.keys(r.inputs).map(function(k){return k+'='+r.inputs[k];}).join(', ')+
+        ' this gives <b>'+Math.round(r.sample*100)/100+'</b></span>'
+      : '<span style="color:var(--clay)">'+esc(r.error)+'</span>';
+  });
+}
+
+function saveMetric(){
+  var m={
+    metric_key:$('m_key').value.trim(), label_en:$('m_en').value, label_ml:$('m_ml').value,
+    type:$('m_type').value, formula:$('m_formula').value.trim(), unit:$('m_unit').value,
+    weight:Number($('m_weight').value)||0, direction:$('m_dir').value, prorate:$('m_prorate').value,
+    scored:$('m_scored').value, has_target:$('m_target').value,
+    display_order:Number($('m_order').value)||99, active:$('m_active').value,
+    cap_override:$('m_cap').value
+  };
+  api('adminSaveMetric',{metric:m})
+    .then(function(){ closeModal(); go('config'); })
+    .catch(function(e){ $('mMsg').innerHTML='<div class="msg err">'+esc(e.message)+'</div>'; });
+}
+
+/* ---------------- cycles ---------------- */
+function pageCycles(){
+  api('adminCycles',{}).then(function(list){
+    var rows=list.map(function(c){
+      var buttons='';
+      if(c.status!=='OPEN') buttons+='<button class="btn sm" onclick="setCycle(\''+c.cycle_id+'\',\'OPEN\')">Open</button> ';
+      if(c.status==='OPEN') buttons+='<button class="btn bad sm" onclick="setCycle(\''+c.cycle_id+'\',\'CLOSED\')">Close</button>';
+      return '<tr><td class="mono">'+esc(c.cycle_id)+'</td><td>'+esc(c.label)+'</td>'+
+        '<td>'+esc(c.start)+'</td><td>'+esc(c.end)+'</td>'+
+        '<td><span class="tag '+(c.status==='OPEN'?'g':(c.status==='CLOSED'?'':'y'))+'">'+esc(c.status)+'</span></td>'+
+        '<td>'+buttons+'</td></tr>';
+    }).join('');
+    $('page').innerHTML=
+      '<div class="card"><h2>New cycle</h2><div class="inline">'+
+        '<div class="field"><label>Cycle id — e.g. 2026-09</label><input id="cId" class="mono"></div>'+
+        '<div class="field"><label>Label</label><input id="cLabel" placeholder="September 2026"></div>'+
+        '<div class="field"><label>Starts</label><input id="cStart" type="date"></div>'+
+        '<div class="field"><label>Ends</label><input id="cEnd" type="date"></div>'+
+      '</div><div id="cMsg"></div><button class="btn" onclick="createCycle()">Create as draft</button></div>'+
+      '<div class="card"><div class="msg warn">Opening a cycle freezes today\'s scoring rules into it. '+
+      'Only one cycle can be open at a time — opening a new one closes the old one.</div>'+
+      '<table><thead><tr><th>Id</th><th>Label</th><th>Starts</th><th>Ends</th><th>Status</th><th></th></tr></thead>'+
+      '<tbody>'+(rows||'<tr><td colspan="6" class="empty">No cycles yet.</td></tr>')+'</tbody></table></div>';
+  }).catch(fail);
+}
+
+function createCycle(){
+  api('adminCreateCycle',{cycle_id:$('cId').value.trim(),label:$('cLabel').value,
+    start:$('cStart').value,end:$('cEnd').value})
+    .then(function(){ go('cycles'); })
+    .catch(function(e){ $('cMsg').innerHTML='<div class="msg err">'+esc(e.message)+'</div>'; });
+}
+function setCycle(id,status){
+  var warn = status==='OPEN'
+    ? 'Open this cycle? Current scoring rules will be frozen into it and any other open cycle will close.'
+    : 'Close this cycle? Owners will not be able to enter anything until you open another.';
+  if(!confirm(warn)) return;
+  api('adminSetCycleStatus',{cycle_id:id,status:status})
+    .then(function(){ go('cycles'); }).catch(function(e){ alert(e.message); });
+}
+
+function recompute(){
+  api('adminRecompute',{}).then(function(){ go(S.page); }).catch(function(e){ alert(e.message); });
+}
+
+/* ---------------- modal ---------------- */
+function modal(html){ $('modal').innerHTML='<div class="modal"><div class="card">'+html+'</div></div>'; }
+function closeModal(){ $('modal').innerHTML=''; }
+
+/* ---------------- boot ---------------- */
+(function(){
+  $('password').addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+  var tok=localStorage.getItem('adminToken');
+  if(tok){ S.token=tok; $('loginView').classList.add('hide'); $('appView').classList.remove('hide'); go('overview'); }
+})();
+</script>
+</body>
+</html>
