@@ -466,6 +466,42 @@ body[data-lang="ml"] .login h1{font-size:29px;line-height:1.22}
   backdrop-filter:blur(14px);
 }
 
+
+/* ==================== PASSWORD VISIBILITY TOGGLE ==================== */
+.password-wrap{
+  position:relative;
+}
+.password-wrap input{
+  padding-right:52px !important;
+}
+.eye-btn{
+  position:absolute;
+  right:9px;
+  top:50%;
+  transform:translateY(-50%);
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--muted);
+  box-shadow:none;
+  z-index:3;
+}
+.eye-btn:hover,
+.eye-btn:focus-visible{
+  background:var(--page);
+  color:var(--ink);
+}
+.eye-btn svg{
+  width:21px;
+  height:21px;
+  pointer-events:none;
+}
+
 </style>
 </head>
 <body data-lang="en">
@@ -481,7 +517,15 @@ body[data-lang="ml"] .login h1{font-size:29px;line-height:1.22}
     <div class="fieldset">
       <div id="loginMsg"></div>
       <input id="username" placeholder="Username" autocomplete="username" autocapitalize="off" spellcheck="false">
+      <div class="password-wrap">
       <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+      <button type="button" class="eye-btn" onclick="togglePasswordVisibility('password', this)" aria-label="Show password" title="Show password">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </button>
+    </div>
       <button class="btn gold" onclick="doLogin()" id="loginBtn">Sign in</button>
     </div>
     <div class="lang-line"><button onclick="toggleLang()">English / മലയാളം</button></div>
@@ -1128,8 +1172,14 @@ function renderMe(){
       '<p class="sub" style="margin:2px 0 0">' + esc(d.user.business_name || '') + ' · ' + esc(d.user.circle_key) + '</p>' + stats + '</div>' +
     '<div class="card"><h2>' + esc(t('changePw')) + '</h2>' +
       '<div id="pwMsg"></div>' +
-      '<div class="field"><label>' + esc(t('currentPw')) + '</label><div class="inputbox"><input id="pwOld" type="password" style="font-size:17px"></div></div>' +
-      '<div class="field"><label>' + esc(t('newPw')) + '</label><div class="inputbox"><input id="pwNew" type="password" style="font-size:17px"></div></div>' +
+      '<div class="field"><label>' + esc(t('currentPw')) + '</label>' +
+      '<div class="inputbox password-wrap"><input id="pwOld" type="password" style="font-size:17px">' +
+      '<button type="button" class="eye-btn" onclick="togglePasswordVisibility(\'pwOld\', this)" aria-label="Show password" title="Show password">' +
+      eyeIcon_() + '</button></div></div>' +
+      '<div class="field"><label>' + esc(t('newPw')) + '</label>' +
+      '<div class="inputbox password-wrap"><input id="pwNew" type="password" style="font-size:17px">' +
+      '<button type="button" class="eye-btn" onclick="togglePasswordVisibility(\'pwNew\', this)" aria-label="Show password" title="Show password">' +
+      eyeIcon_() + '</button></div></div>' +
       '<button class="btn" onclick="savePassword()">' + esc(t('savePw')) + '</button></div>' +
     '<div class="card"><h2>' + esc(t('language')) + '</h2>' +
       '<button class="btn ghost" onclick="toggleLang()">English / മലയാളം</button>' +
@@ -1139,8 +1189,14 @@ function renderMe(){
 function renderPasswordChange(){
   $('pageToday').innerHTML = '<div class="card today-card"><h2>' + esc(t('changePw')) + '</h2>' +
     '<div class="msg warn"><span>🔑</span><span>' + esc(t('mustChange')) + '</span></div><div id="pwMsg"></div>' +
-    '<div class="field"><label>' + esc(t('currentPw')) + '</label><div class="inputbox"><input id="pwOld" type="password" style="font-size:17px"></div></div>' +
-    '<div class="field"><label>' + esc(t('newPw')) + '</label><div class="inputbox"><input id="pwNew" type="password" style="font-size:17px"></div></div>' +
+    '<div class="field"><label>' + esc(t('currentPw')) + '</label>' +
+      '<div class="inputbox password-wrap"><input id="pwOld" type="password" style="font-size:17px">' +
+      '<button type="button" class="eye-btn" onclick="togglePasswordVisibility(\'pwOld\', this)" aria-label="Show password" title="Show password">' +
+      eyeIcon_() + '</button></div></div>' +
+    '<div class="field"><label>' + esc(t('newPw')) + '</label>' +
+      '<div class="inputbox password-wrap"><input id="pwNew" type="password" style="font-size:17px">' +
+      '<button type="button" class="eye-btn" onclick="togglePasswordVisibility(\'pwNew\', this)" aria-label="Show password" title="Show password">' +
+      eyeIcon_() + '</button></div></div>' +
     '<button class="btn gold" onclick="savePassword()">' + esc(t('savePw')) + '</button></div>';
 }
 
@@ -1156,6 +1212,36 @@ function savePassword(){
       if (m) m.innerHTML = '<div class="msg err"><span>✕</span><span>' + esc(friendly(e.message)) + '</span></div>';
       toast(friendly(e.message), 'err');
     });
+}
+
+
+/* ========================== password visibility ========================== */
+function eyeIcon_(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12"></path>' +
+    '<circle cx="12" cy="12" r="3"></circle></svg>';
+}
+
+function eyeOffIcon_(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M3 3l18 18"></path>' +
+    '<path d="M10.6 10.6a2 2 0 002.8 2.8"></path>' +
+    '<path d="M9.9 4.2A10.7 10.7 0 0112 4c6.5 0 10 8 10 8a17.8 17.8 0 01-2.1 3.2"></path>' +
+    '<path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a9.8 9.8 0 005.4-1.6"></path>' +
+    '</svg>';
+}
+
+function togglePasswordVisibility(inputId, button){
+  var input = document.getElementById(inputId);
+  if (!input || !button) return;
+
+  var shouldShow = input.type === 'password';
+  input.type = shouldShow ? 'text' : 'password';
+  button.innerHTML = shouldShow ? eyeOffIcon_() : eyeIcon_();
+  button.setAttribute('aria-label', shouldShow ? 'Hide password' : 'Show password');
+  button.setAttribute('title', shouldShow ? 'Hide password' : 'Show password');
 }
 
 /* ========================== helpers ========================== */
