@@ -728,6 +728,10 @@ var T = {
     historyFormTitle:"പഴയ ബിസിനസ് കണക്ക്",
     historyZero:"ഈ പഴയ ദിവസങ്ങൾക്ക് penalty ഇല്ല. ഇവിടെ നൽകുന്ന കണക്ക് monthly business performance-ൽ മാത്രം കൂട്ടിച്ചേർക്കും.",
     historySavedToast:"പഴയ കണക്ക് സേവ് ചെയ്തു",
+    finalReceivedTitle:"ഓഗസ്റ്റ് റിപ്പോർട്ടിംഗ് പൂർത്തിയായി",
+    finalReceivedText:"31 ഓഗസ്റ്റ് ബിസിനസ് കണക്ക് ലഭിച്ചു. സെപ്റ്റംബർ 1 അവസാനത്തോടെ റിപ്പോർട്ടിംഗ് വിൻഡോ അടയ്ക്കും.",
+    reportingClosedTitle:"ഓഗസ്റ്റ് റിപ്പോർട്ടിംഗ് അടച്ചു",
+    reportingClosedText:"31 ഓഗസ്റ്റ് ബിസിനസ് കണക്കിന്റെ അവസാന due date സെപ്റ്റംബർ 1 ആയിരുന്നു. പുതിയ owner entries ഇനി സ്വീകരിക്കില്ല.",
     todayNumbers:"ഇന്നലെത്തെ ബിസിനസ് കണക്ക്", saveToday:"ബിസിനസ് കണക്ക് സേവ് ചെയ്യുക",
     saved:"സേവ് ചെയ്തു", saving:"സേവ് ചെയ്യുന്നു…",
     savedToast:"ബിസിനസ് കണക്ക് സേവ് ചെയ്തു",
@@ -781,6 +785,10 @@ var T = {
     historyFormTitle:"Historical Business Data",
     historyZero:"These pre-launch dates have no penalty. The numbers entered here are added only to monthly business performance.",
     historySavedToast:"Historical data saved",
+    finalReceivedTitle:"August Reporting Complete",
+    finalReceivedText:"Your 31 August business numbers are received. The reporting window closes at the end of 1 September.",
+    reportingClosedTitle:"August Reporting Closed",
+    reportingClosedText:"The final due date for 31 August business numbers was 1 September. New owner entries are no longer accepted.",
     todayNumbers:"Yesterday's Business Numbers", saveToday:"Save business numbers",
     saved:"Saved", saving:"Saving…",
     savedToast:"Business numbers saved",
@@ -1091,6 +1099,30 @@ function render(){
 
   var approved = d.targets.filter(function(x){ return x.status === 'APPROVED'; });
   if (!approved.length) return renderTargets();
+
+  // Final reporting lock: the cycle end date is a BUSINESS date.
+  // Its due date is the next calendar day. For Aug 31, that is Sep 1.
+  if (d.settings.reporting_closed) {
+    $('pageToday').innerHTML =
+      '<div class="card"><div class="empty"><span class="big">✓</span>' +
+      '<div style="font-weight:800;font-size:19px;margin-bottom:7px">' + esc(t('reportingClosedTitle')) + '</div>' +
+      '<div style="max-width:430px;margin:0 auto">' + esc(t('reportingClosedText')) + '</div>' +
+      '</div></div>' +
+      renderScoreCard() + renderProgress();
+    return;
+  }
+
+  // On the final due date, once Aug 31 has been submitted, show completion
+  // instead of asking for more daily data.
+  if (d.cycle.today === d.settings.final_due_date && d.settings.final_entry_submitted) {
+    $('pageToday').innerHTML =
+      '<div class="card"><div class="empty"><span class="big">✓</span>' +
+      '<div style="font-weight:800;font-size:19px;margin-bottom:7px">' + esc(t('finalReceivedTitle')) + '</div>' +
+      '<div style="max-width:430px;margin:0 auto">' + esc(t('finalReceivedText')) + '</div>' +
+      '</div></div>' +
+      renderScoreCard() + renderProgress();
+    return;
+  }
 
   // Launch guard: daily entry starts only when the first live business date
   // becomes due. For the August launch, Aug 10 numbers become due on Aug 11.
