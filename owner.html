@@ -328,6 +328,28 @@ input{font:inherit}
 .tabs button.on{color:var(--ink);background:var(--page)}
 .tabs button.on svg{stroke:var(--gold-deep)}
 
+
+/* ==================== HISTORICAL DATA ==================== */
+.history-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.history-head .sub{margin:4px 0 0}
+.history-progress{flex:none;background:var(--page);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:12px;font-weight:800;color:var(--ink);white-space:nowrap}
+.history-note{display:flex;gap:9px;align-items:flex-start;padding:11px 12px;margin-bottom:13px;background:#F3F8F4;border:1px solid #D9E9DC;border-radius:13px;font-size:13px;line-height:1.45;color:var(--ink-2)}
+.history-note b{color:var(--jade);font-size:15px}
+.history-list{display:flex;flex-direction:column;gap:9px}
+.history-row{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.history-date{min-width:68px}
+.history-date b{display:block;font-size:15px;color:var(--ink)}
+.history-date span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.history-summary{flex:1;min-width:0}
+.history-summary b{display:block;font-size:13px;color:var(--ink)}
+.history-summary span{display:block;font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.history-status{flex:none;font-size:10.5px;font-weight:800;border-radius:999px;padding:5px 7px;background:var(--page);color:var(--muted)}
+.history-status.done{background:#EEF7F0;color:#2F6C42}
+.history-status.wait{background:#FFF7E6;color:#8A6410}
+.history-row button{flex:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:7px 9px;font-size:11px;font-weight:800}
+.history-row button:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:390px){.history-status{display:none}.history-date{min-width:61px}.history-row{gap:8px;padding:10px}}
+
 /* ==================== LOGIN ==================== */
 .login{
   position:relative;min-height:100vh;min-height:100dvh;
@@ -650,6 +672,7 @@ body[data-lang="ml"] .login h1{font-size:29px;line-height:1.22}
 
   <div class="wrap">
     <div id="pageToday"></div>
+    <div id="pageHistory" class="hide"></div>
     <div id="pageBoard" class="hide"></div>
     <div id="pageMe" class="hide"></div>
   </div>
@@ -658,6 +681,10 @@ body[data-lang="ml"] .login h1{font-size:29px;line-height:1.22}
     <button id="tabToday" class="on" onclick="showTab('today')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
       <span id="tabTodayLbl">ഇന്ന്</span>
+    </button>
+    <button id="tabHistory" onclick="showTab('history')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+      <span id="tabHistoryLbl">പഴയ കണക്ക്</span>
     </button>
     <button id="tabBoard" onclick="showTab('board')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4v-7H4zM10 20h4V4h-4zM16 20h4v-11h-4z"/></svg>
@@ -693,7 +720,14 @@ var T = {
     signin:"പ്രവേശിക്കുക", signingin:"പ്രവേശിക്കുന്നു…",
     tagline:"നിങ്ങളുടെ ദിവസേനയുള്ള കണക്ക്. നിങ്ങളുടെ സ്ഥാനം.",
     eyebrow:"11X കമ്പനി · കേരളം",
-    today:"ഡെയിലി എൻട്രി", board:"നില", me:"എന്റെ",
+    today:"ഡെയിലി എൻട്രി", history:"പഴയ കണക്ക്", board:"നില", me:"എന്റെ",
+    historyTitle:"ഓഗസ്റ്റ് 1–9 പഴയ ബിസിനസ് കണക്ക്",
+    historyIntro:"ഈ ദിവസങ്ങളിലെ Customers, Bills, Revenue ചേർക്കുക. ഇവ August performance-ൽ കണക്കാക്കും; penalty അല്ലെങ്കിൽ consistency loss ഒന്നും ഉണ്ടാകില്ല.",
+    historySaved:"സേവ് ചെയ്തു", historyPending:"ചേർക്കാനുണ്ട്", historyFuture:"ഇനി ലഭ്യമല്ല",
+    historyEnter:"ചേർക്കുക", historyEdit:"തിരുത്തുക", historyDone:"{a}/{b} ദിവസം പൂർത്തിയായി",
+    historyFormTitle:"പഴയ ബിസിനസ് കണക്ക്",
+    historyZero:"ഈ പഴയ ദിവസങ്ങൾക്ക് penalty ഇല്ല. ഇവിടെ നൽകുന്ന കണക്ക് monthly business performance-ൽ മാത്രം കൂട്ടിച്ചേർക്കും.",
+    historySavedToast:"പഴയ കണക്ക് സേവ് ചെയ്തു",
     todayNumbers:"ഇന്നലെത്തെ ബിസിനസ് കണക്ക്", saveToday:"ബിസിനസ് കണക്ക് സേവ് ചെയ്യുക",
     saved:"സേവ് ചെയ്തു", saving:"സേവ് ചെയ്യുന്നു…",
     savedToast:"ബിസിനസ് കണക്ക് സേവ് ചെയ്തു",
@@ -701,6 +735,8 @@ var T = {
     closedConfirm:"കാണിച്ചിരിക്കുന്ന ബിസിനസ് തീയതി കട അടച്ച ദിവസമായി രേഖപ്പെടുത്തണോ? ഒരു മാസത്തിൽ {n} ദിവസം മാത്രമേ പറ്റൂ.",
     closedTitle:"ഈ ബിസിനസ് ദിവസം കട അടച്ചിരുന്നോ?",
     closedToday:"ഈ ബിസിനസ് ദിവസം അടച്ചതായി രേഖപ്പെടുത്തി.",
+    reopenClosed:"വീണ്ടും തുറന്ന് കണക്ക് ചേർക്കുക",
+    reopenClosedNote:"തെറ്റായി Shop Closed നൽകിയതാണെങ്കിൽ, അല്ലെങ്കിൽ പിന്നീട് കട തുറന്നെങ്കിൽ, യഥാർത്ഥ Customers, Bills, Revenue ചേർത്ത് Save ചെയ്യുക.",
     closedLeft:"{n} ബാക്കി",
     yes:"അതെ, രേഖപ്പെടുത്തുക", cancel:"വേണ്ട",
     points:"പോയിന്റ്", ofHundred:"നൂറിൽ",
@@ -718,7 +754,7 @@ var T = {
     submitTargets:"ടാർഗറ്റ് അയക്കുക",
     targetsPending:"ടാർഗറ്റ് അഡ്മിന്റെ അംഗീകാരത്തിനായി കാത്തിരിക്കുന്നു.",
     targetsRejected:"ടാർഗറ്റ് അംഗീകരിച്ചില്ല. വീണ്ടും വെക്കുക.",
-    noCycle:"ഇപ്പോൾ മത്സരം നടക്കുന്നില്ല. അഡ്മിൻ തുടങ്ങുമ്പോൾ അറിയിക്കും.",
+    noCycle:"ഇപ്പോൾ മത്സരം നടക്കുന്നില്ല. അഡ്മിൻ തുടങ്ങുമ്പോൾ അറിയിക്കും.", launchTitle:"ഡെയിലി റിപ്പോർട്ടിംഗ് ഉടൻ ആരംഭിക്കും", launchText:"ആദ്യ ലൈവ് എൻട്രി 10 ഓഗസ്റ്റ് ബിസിനസ് കണക്കാണ്. അത് 11 ഓഗസ്റ്റിന് നൽകണം.", standingsStart:"സർക്കിൾ സ്റ്റാൻഡിംഗ്സ് {date} മുതൽ കാണാം.",
     changePw:"പുതിയ പാസ്‌വേഡ് വെക്കുക", currentPw:"ഇപ്പോഴത്തെ പാസ്‌വേഡ്",
     newPw:"പുതിയ പാസ്‌വേഡ്", savePw:"പാസ്‌വേഡ് സേവ് ചെയ്യുക",
     mustChange:"ആദ്യം പാസ്‌വേഡ് മാറ്റുക.",
@@ -737,7 +773,14 @@ var T = {
     signin:"Sign in", signingin:"Signing in…",
     tagline:"Track today. Lead tomorrow.",
     eyebrow:"11X Company · Kerala",
-    today:"Daily Entry", board:"Standings", me:"Me",
+    today:"Daily Entry", history:"Past Data", board:"Standings", me:"Me",
+    historyTitle:"Aug 1–9 Historical Business Data",
+    historyIntro:"Enter Customers, Bills and Revenue for these pre-launch dates. They count toward August business performance, with zero penalty and zero consistency loss.",
+    historySaved:"Saved", historyPending:"Pending", historyFuture:"Not available yet",
+    historyEnter:"Enter", historyEdit:"Edit", historyDone:"{a}/{b} days completed",
+    historyFormTitle:"Historical Business Data",
+    historyZero:"These pre-launch dates have no penalty. The numbers entered here are added only to monthly business performance.",
+    historySavedToast:"Historical data saved",
     todayNumbers:"Yesterday's Business Numbers", saveToday:"Save business numbers",
     saved:"Saved", saving:"Saving…",
     savedToast:"Business numbers saved",
@@ -745,6 +788,8 @@ var T = {
     closedConfirm:"This marks the displayed business date as closed. You get {n} closed days a month.",
     closedTitle:"Mark the shop closed?",
     closedToday:"Marked closed for this business date.",
+    reopenClosed:"Reopen & enter numbers",
+    reopenClosedNote:"If Shop Closed was selected by mistake, or the shop later opened, enter the actual Customers, Bills and Revenue and save.",
     closedLeft:"{n} left",
     yes:"Yes, mark it closed", cancel:"Cancel",
     points:"points", ofHundred:"of 100",
@@ -833,7 +878,7 @@ var HELP_GUIDE = {
     negativeTitle:"How points become negative",
     negativeText:"A business date is due the next day. If it is still missing after that due date, 2 points are deducted by default. A later entry adds the business numbers, but normally gives no consistency credit and the penalty remains.",
     closedTitle:"What happens on a closed day",
-    closedText:"For the business date due today, use Shop Closed when the shop was genuinely closed. It protects that date from the missed-entry penalty, but the monthly target does not reduce. The default limit is 4 closed days per cycle.",
+    closedText:"For the business date due today, use Shop Closed only when the shop was genuinely closed. It protects that date from the missed-entry penalty, but the monthly target does not reduce. If you selected it by mistake or the shop later opened, use Reopen & enter numbers. The default limit is 4 closed days per cycle.",
     rankTitle:"How ranking is decided",
     rankText:"Final points = weighted achievement − missed-day penalties. The highest final points become Rank 1 in the circle and overall. Equal scores share the same rank.",
     good:"Score goes up: better target achievement + better average bill + daily on-time entry.",
@@ -859,7 +904,7 @@ var HELP_GUIDE = {
     negativeTitle:"പോയിന്റ് എങ്ങനെ കുറയും",
     negativeText:"ഒരു business date-ന്റെ കണക്ക് അടുത്ത ദിവസം due ആണ്. ആ due date കഴിഞ്ഞിട്ടും entry ഇല്ലെങ്കിൽ സാധാരണയായി 2 പോയിന്റ് കുറയും. പിന്നീട് ചേർത്താൽ business numbers കണക്കിൽ വരും, പക്ഷേ consistency credit കിട്ടില്ല; penalty തുടരുകയും ചെയ്യും.",
     closedTitle:"Shop Closed നൽകിയാൽ എന്ത് സംഭവിക്കും",
-    closedText:"ഇന്ന് due ആയിരിക്കുന്ന business date-ൽ shop ശരിക്കും അടച്ചിരുന്നെങ്കിൽ Shop Closed ഉപയോഗിക്കുക. ആ ദിവസത്തെ missed-entry penalty ഒഴിവാകും. പക്ഷേ monthly target കുറയില്ല. ഒരു cycle-ൽ default limit 4 closed days ആണ്.",
+    closedText:"ഇന്ന് due ആയിരിക്കുന്ന business date-ൽ shop ശരിക്കും അടച്ചിരുന്നെങ്കിൽ മാത്രം Shop Closed ഉപയോഗിക്കുക. ആ ദിവസത്തെ missed-entry penalty ഒഴിവാകും. പക്ഷേ monthly target കുറയില്ല. തെറ്റായി അടച്ചതായി നൽകിയതോ പിന്നീട് shop തുറന്നതോ ആണെങ്കിൽ Reopen & enter numbers ഉപയോഗിച്ച് യഥാർത്ഥ കണക്ക് നൽകാം. ഒരു cycle-ൽ default limit 4 closed days ആണ്.",
     rankTitle:"റാങ്ക് എങ്ങനെ തീരുമാനിക്കും",
     rankText:"Final points = weighted achievement − missed-day penalties. ഏറ്റവും കൂടുതൽ final points ഉള്ളയാൾ circle-ലും overall-ലും Rank 1 ആകും. ഒരേ score ആണെങ്കിൽ ഒരേ rank ലഭിക്കും.",
     good:"സ്കോർ കൂടും: മികച്ച target achievement + മികച്ച average bill + എല്ലാ ദിവസവും സമയത്ത് entry.",
@@ -943,7 +988,7 @@ function toggleLang(){
   document.documentElement.lang = S.lang;
   localStorage.setItem('ownerLang', S.lang);
   paintChrome();
-  if (S.token) { if (S.data) render(); if (S.tab==='board') renderBoard(); if (S.tab==='me') renderMe(); }
+  if (S.token) { if (S.data) render(); if (S.tab==='history') renderHistory(); if (S.tab==='board') renderBoard(); if (S.tab==='me') renderMe(); }
 }
 function paintChrome(){
   $('loginSub').textContent = t('tagline');
@@ -952,6 +997,7 @@ function paintChrome(){
   $('username').placeholder = 'Username';
   $('password').placeholder = 'Password';
   $('tabTodayLbl').textContent = t('today');
+  $('tabHistoryLbl').textContent = t('history');
   $('tabBoardLbl').textContent = t('board');
   $('tabMeLbl').textContent = t('me');
   $('hLang').textContent = S.lang === 'ml' ? 'EN' : 'ML';
@@ -1008,7 +1054,7 @@ function skeleton(){
 function load(){
   $('pageToday').innerHTML = skeleton();
   api('getDashboard', {})
-    .then(function(d){ S.data = d; render(); })
+    .then(function(d){ S.data = d; render(); if (S.tab === 'history') renderHistory(); })
     .catch(function(e){
       if (e.message === 'NO_SESSION' || e.message === 'SESSION_EXPIRED') {
         localStorage.removeItem('token'); location.reload(); return;
@@ -1020,11 +1066,12 @@ function load(){
 
 function showTab(tab){
   S.tab = tab;
-  ['today','board','me'].forEach(function(k){
+  ['today','history','board','me'].forEach(function(k){
     $('page' + k[0].toUpperCase() + k.slice(1)).classList.toggle('hide', k !== tab);
     $('tab' + k[0].toUpperCase() + k.slice(1)).classList.toggle('on', k === tab);
   });
   window.scrollTo({ top:0, behavior:'smooth' });
+  if (tab === 'history') renderHistory();
   if (tab === 'board') loadBoard();
   if (tab === 'me') renderMe();
 }
@@ -1092,8 +1139,14 @@ function renderTodayCard(){
       '<h2>' + esc(t('todayNumbers')) + '</h2>' +
       '<p class="sub">' + esc(dateLine) + '</p>' +
       '<div class="tick">✓</div>' +
-      '<div style="font-weight:600">' + esc(t('closedToday')) + '</div>' +
-      '</div>';
+      '<div style="font-weight:700">' + esc(t('closedToday')) + '</div>' +
+      '<div class="msg info" style="margin-top:12px"><span>↻</span><span>' +
+        esc(t('reopenClosedNote')) + '</span></div>' +
+      '<div class="btn-row">' +
+        '<button class="btn gold" onclick="openEntry(false, \'' + te.date + '\')">' +
+          esc(t('reopenClosed')) + '</button>' +
+        '<button class="btn ghost" onclick="openEntry(true)">' + esc(t('pickDate')) + '</button>' +
+      '</div></div>';
   }
 
   var head = '<div class="card today-card' + (te ? ' done' : '') + '">' +
@@ -1303,9 +1356,14 @@ function openEntry(withDate, forDate){
     return fieldHTML(m, te[m.metric_key] || 0);
   }).join('');
 
+  var selectedEntry = d.entries.filter(function(e){ return e.date === date; })[0] || null;
+
   $('pageToday').innerHTML =
     '<div class="card today-card"><h2>' + esc(t('todayNumbers')) + '</h2>' +
     '<p class="sub">' + esc(prettyDate(date)) + '</p>' +
+    (selectedEntry && selectedEntry.is_closed
+      ? '<div class="msg info"><span>↻</span><span>' + esc(t('reopenClosedNote')) + '</span></div>'
+      : '') +
     (date !== reportDate
       ? '<div class="msg warn"><span>⚠</span><span>' + esc(t('backfillWarn')) + '</span></div>'
       : '') +
@@ -1357,6 +1415,178 @@ function submitTargets(){
   api('proposeTargets', { targets: targets })
     .then(function(){ toast(t('targetsPending'), 'ok'); load(); })
     .catch(function(e){ $('tgBtn').disabled = false; toast(friendly(e.message), 'err'); });
+}
+
+
+/* ========================== historical pre-launch data ========================== */
+function shiftClientKey_(key, days){
+  var d = new Date(key + 'T12:00:00');
+  d.setDate(d.getDate() + Number(days || 0));
+  return d.toISOString().slice(0,10);
+}
+
+function historicalWindow_(){
+  var d = S.data;
+  if (!d || !d.cycle) return null;
+  var start = d.cycle.start;
+  var disciplineStart = (d.settings && d.settings.discipline_start_date) || start;
+  var end = shiftClientKey_(disciplineStart, -1);
+  if (end < start) return null;
+  return {
+    start:start,
+    end:end,
+    available_through:(d.cycle.report_date || shiftClientKey_(d.cycle.today, -1))
+  };
+}
+
+function historicalDates_(){
+  var w = historicalWindow_();
+  if (!w) return [];
+  var out = [];
+  var d = new Date(w.start + 'T12:00:00');
+  var last = new Date(w.end + 'T12:00:00');
+  while (d <= last) {
+    out.push(d.toISOString().slice(0,10));
+    d.setDate(d.getDate() + 1);
+  }
+  return out;
+}
+
+function historyEntryFor_(date){
+  return (S.data && S.data.entries
+    ? S.data.entries.filter(function(e){ return e.date === date; })[0]
+    : null) || null;
+}
+
+function shortHistoryDate_(key){
+  var d = new Date(key + 'T12:00:00');
+  return {
+    day:d.toLocaleDateString(S.lang === 'ml' ? 'ml-IN' : 'en-IN', {day:'numeric', month:'short'}),
+    weekday:d.toLocaleDateString(S.lang === 'ml' ? 'ml-IN' : 'en-IN', {weekday:'short'})
+  };
+}
+
+function historySummary_(entry){
+  if (!entry || !entry.payload) return '';
+  return inputMetrics().map(function(m){
+    return label(m) + ': ' + fmt(entry.payload[m.metric_key], m.unit);
+  }).join(' · ');
+}
+
+function renderHistory(){
+  var host = $('pageHistory');
+  if (!host) return;
+
+  if (!S.data || !S.data.cycle) {
+    host.innerHTML = '<div class="card"><div class="empty"><span class="big">◷</span>' +
+      esc(t('noCycle')) + '</div></div>';
+    return;
+  }
+
+  if (S.data.user.must_change_pw) {
+    host.innerHTML = '<div class="card"><div class="empty">' + esc(t('mustChange')) + '</div></div>';
+    return;
+  }
+
+  var w = historicalWindow_();
+  var dates = historicalDates_();
+  if (!w || !dates.length) {
+    host.innerHTML = '<div class="card"><div class="empty">—</div></div>';
+    return;
+  }
+
+  var saved = dates.filter(function(date){ return !!historyEntryFor_(date); }).length;
+
+  var html = '<div class="card">' +
+    '<div class="history-head"><div><h2>' + esc(t('historyTitle')) + '</h2>' +
+      '<p class="sub">' + esc(prettyDate(w.start)) + ' → ' + esc(prettyDate(w.end)) + '</p></div>' +
+      '<div class="history-progress">' + esc(t('historyDone', {a:saved, b:dates.length})) + '</div></div>' +
+    '<div class="history-note"><b>✓</b><span>' + esc(t('historyIntro')) + '</span></div>' +
+    '<div class="history-list">';
+
+  dates.forEach(function(date){
+    var entry = historyEntryFor_(date);
+    var available = date <= w.available_through;
+    var pd = shortHistoryDate_(date);
+    var status = entry ? t('historySaved') : (available ? t('historyPending') : t('historyFuture'));
+    var cls = entry ? 'done' : (available ? '' : 'wait');
+    var action = entry ? t('historyEdit') : t('historyEnter');
+
+    html += '<div class="history-row">' +
+      '<div class="history-date"><b>' + esc(pd.day) + '</b><span>' + esc(pd.weekday) + '</span></div>' +
+      '<div class="history-summary"><b>' + esc(status) + '</b><span>' +
+        esc(entry ? historySummary_(entry) : (available ? t('historyZero') : '—')) +
+      '</span></div>' +
+      '<span class="history-status ' + cls + '">' + esc(status) + '</span>' +
+      '<button ' + (available ? '' : 'disabled ') +
+        'onclick="openHistoryEntry(\'' + date + '\')">' + esc(action) + '</button>' +
+    '</div>';
+  });
+
+  host.innerHTML = html + '</div></div>';
+}
+
+function historyFieldHTML_(m, value){
+  var cur = m.unit === 'CURRENCY';
+  return '<div class="field"><label for="hist_in_' + m.metric_key + '">' + esc(label(m)) + '</label>' +
+    '<div class="inputbox' + (cur ? ' has-pre' : '') + '">' +
+      (cur ? '<span class="pre">₹</span>' : '') +
+      '<input id="hist_in_' + m.metric_key + '" type="number" inputmode="decimal" min="0" step="any" value="' +
+      (value || 0) + '" onfocus="this.select()">' +
+    '</div></div>';
+}
+
+function collectHistoryValues_(){
+  var v = {};
+  inputMetrics().forEach(function(m){
+    var el = $('hist_in_' + m.metric_key);
+    v[m.metric_key] = el ? (Number(el.value) || 0) : 0;
+  });
+  return v;
+}
+
+function openHistoryEntry(date){
+  var w = historicalWindow_();
+  if (!w || date < w.start || date > w.end || date > w.available_through) return;
+
+  var entry = historyEntryFor_(date);
+  var payload = entry && entry.payload ? entry.payload : {};
+  var fields = inputMetrics().map(function(m){
+    return historyFieldHTML_(m, payload[m.metric_key] || 0);
+  }).join('');
+
+  $('pageHistory').innerHTML =
+    '<div class="card today-card">' +
+      '<h2>' + esc(t('historyFormTitle')) + '</h2>' +
+      '<p class="sub">' + esc(prettyDate(date)) + '</p>' +
+      '<div class="history-note"><b>✓</b><span>' + esc(t('historyZero')) + '</span></div>' +
+      fields +
+      '<button class="btn gold" id="historySaveBtn" onclick="submitHistoricalEntry(\'' + date + '\')">' +
+        esc(t('saveToday')) + '</button>' +
+      '<div class="btn-row"><button class="btn ghost" onclick="renderHistory()">' +
+        esc(t('close')) + '</button></div>' +
+    '</div>';
+}
+
+function submitHistoricalEntry(date){
+  if (S.busy) return;
+  S.busy = true;
+  var btn = $('historySaveBtn');
+  if (btn) { btn.textContent = t('saving'); btn.disabled = true; }
+
+  api('submitEntry', {date:date, values:collectHistoryValues_()})
+    .then(function(){ return api('getDashboard', {}); })
+    .then(function(d){
+      S.data = d;
+      S.busy = false;
+      toast(t('historySavedToast'), 'ok');
+      renderHistory();
+    })
+    .catch(function(e){
+      S.busy = false;
+      if (btn) { btn.textContent = t('saveToday'); btn.disabled = false; }
+      toast(friendly(e.message), 'err');
+    });
 }
 
 /* ========================== leaderboard ========================== */
