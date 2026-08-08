@@ -176,6 +176,7 @@ input{font:inherit}
 .day.late{background:#fff;color:var(--gold-deep);border-color:var(--gold)}
 .day.closed{background:repeating-linear-gradient(135deg,#fff,#fff 3px,var(--line) 3px,var(--line) 5px);color:var(--muted);border-color:var(--line)}
 .day.missed{background:#fff;border:1.5px dashed var(--clay);color:var(--clay)}
+.day.due{background:#EEF5FF;border-color:#7AA7D9;color:#173A63;font-weight:800}
 .day.future{opacity:.38}
 .day.today{outline:2.5px solid var(--gold);outline-offset:2px;z-index:1}
 .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:13px;font-size:12px;color:var(--muted)}
@@ -692,14 +693,14 @@ var T = {
     signin:"പ്രവേശിക്കുക", signingin:"പ്രവേശിക്കുന്നു…",
     tagline:"നിങ്ങളുടെ ദിവസേനയുള്ള കണക്ക്. നിങ്ങളുടെ സ്ഥാനം.",
     eyebrow:"11X കമ്പനി · കേരളം",
-    today:"ഇന്ന്", board:"നില", me:"എന്റെ",
-    todayNumbers:"ഇന്നത്തെ കണക്ക്", saveToday:"ഇന്നത്തെ കണക്ക് സേവ് ചെയ്യുക",
+    today:"ഡെയിലി എൻട്രി", board:"നില", me:"എന്റെ",
+    todayNumbers:"ഇന്നലെത്തെ ബിസിനസ് കണക്ക്", saveToday:"ബിസിനസ് കണക്ക് സേവ് ചെയ്യുക",
     saved:"സേവ് ചെയ്തു", saving:"സേവ് ചെയ്യുന്നു…",
-    savedToast:"ഇന്നത്തെ കണക്ക് സേവ് ചെയ്തു",
-    edit:"തിരുത്തുക", shopClosed:"ഇന്ന് കട അടച്ചു",
-    closedConfirm:"ഇന്ന് കട അടച്ചതായി രേഖപ്പെടുത്തണോ? ഒരു മാസത്തിൽ {n} ദിവസം മാത്രമേ പറ്റൂ.",
-    closedTitle:"ഇന്ന് കട അടച്ചോ?",
-    closedToday:"ഇന്ന് കട അടച്ചിരിക്കുന്നു എന്ന് രേഖപ്പെടുത്തി.",
+    savedToast:"ബിസിനസ് കണക്ക് സേവ് ചെയ്തു",
+    edit:"തിരുത്തുക", shopClosed:"ഈ ദിവസം കട അടച്ചിരുന്നു",
+    closedConfirm:"കാണിച്ചിരിക്കുന്ന ബിസിനസ് തീയതി കട അടച്ച ദിവസമായി രേഖപ്പെടുത്തണോ? ഒരു മാസത്തിൽ {n} ദിവസം മാത്രമേ പറ്റൂ.",
+    closedTitle:"ഈ ബിസിനസ് ദിവസം കട അടച്ചിരുന്നോ?",
+    closedToday:"ഈ ബിസിനസ് ദിവസം അടച്ചതായി രേഖപ്പെടുത്തി.",
     closedLeft:"{n} ബാക്കി",
     yes:"അതെ, രേഖപ്പെടുത്തുക", cancel:"വേണ്ട",
     points:"പോയിന്റ്", ofHundred:"നൂറിൽ",
@@ -709,7 +710,7 @@ var T = {
     lgDone:"ചേർത്തു", lgLate:"വൈകി", lgClosed:"അടച്ചു", lgMissed:"വിട്ടുപോയി",
     progress:"ടാർഗറ്റ് പുരോഗതി",
     target:"ടാർഗറ്റ്", sofar:"ഇതുവരെ", tillToday:"ഇന്നുവരെ വേണ്ടത്",
-    champion:"ഇപ്പോഴത്തെ ചാമ്പ്യൻ",
+    champion:"ഇപ്പോഴത്തെ ചാമ്പ്യൻ", overallTop3:"ഓവർഓൾ ടോപ് 3", dueToday:"ഇന്ന് നൽകേണ്ടത്", lgDue:"ഇന്ന് ഡ്യൂ",
     thisMonth:"ഈ മാസം", allTime:"എക്കാലത്തെയും മൊത്തം", months:"മാസം",
     myCircle:"എന്റെ സർക്കിൾ", locked:"{n}-ാം ദിവസം മുതൽ റാങ്ക് കാണാം",
     setTargets:"ഈ മാസത്തെ ടാർഗറ്റ് വെക്കുക",
@@ -722,7 +723,7 @@ var T = {
     newPw:"പുതിയ പാസ്‌വേഡ്", savePw:"പാസ്‌വേഡ് സേവ് ചെയ്യുക",
     mustChange:"ആദ്യം പാസ്‌വേഡ് മാറ്റുക.",
     logout:"പുറത്തുകടക്കുക",
-    backfillWarn:"ഇന്നത്തെ ദിവസം അല്ല. വൈകി ചേർത്താൽ ചിട്ടയുടെ പോയിന്റ് കിട്ടില്ല, പിഴയും വരും.",
+    backfillWarn:"ഈ കണക്ക് നൽകേണ്ട ദിവസം കഴിഞ്ഞു. ഇപ്പോൾ ചേർത്താൽ ബിസിനസ് നമ്പറുകൾ കണക്കിൽ വരും, പക്ഷേ late ആയി കണക്കാക്കി പിഴ തുടരും.",
     pickDate:"മറ്റൊരു ദിവസം", continueBtn:"തുടരുക", close:"അടയ്ക്കുക",
     account:"അക്കൗണ്ട്", language:"ഭാഷ",
     errAuth:"Username അല്ലെങ്കിൽ password തെറ്റാണ്.",
@@ -736,14 +737,14 @@ var T = {
     signin:"Sign in", signingin:"Signing in…",
     tagline:"Track today. Lead tomorrow.",
     eyebrow:"11X Company · Kerala",
-    today:"Today", board:"Standings", me:"Me",
-    todayNumbers:"Today's numbers", saveToday:"Save today's numbers",
+    today:"Daily Entry", board:"Standings", me:"Me",
+    todayNumbers:"Yesterday's Business Numbers", saveToday:"Save business numbers",
     saved:"Saved", saving:"Saving…",
-    savedToast:"Today's numbers saved",
-    edit:"Edit", shopClosed:"Shop closed today",
-    closedConfirm:"This marks today as a closed day. You get {n} closed days a month.",
+    savedToast:"Business numbers saved",
+    edit:"Edit", shopClosed:"Shop was closed on this date",
+    closedConfirm:"This marks the displayed business date as closed. You get {n} closed days a month.",
     closedTitle:"Mark the shop closed?",
-    closedToday:"Marked closed for today.",
+    closedToday:"Marked closed for this business date.",
     closedLeft:"{n} left",
     yes:"Yes, mark it closed", cancel:"Cancel",
     points:"points", ofHundred:"of 100",
@@ -753,7 +754,7 @@ var T = {
     lgDone:"Entered", lgLate:"Late", lgClosed:"Closed", lgMissed:"Missed",
     progress:"Target progress",
     target:"Target", sofar:"So far", tillToday:"Needed by today",
-    champion:"Current champion",
+    champion:"Current champion", overallTop3:"Overall Top 3", dueToday:"Due today", lgDue:"Due today",
     thisMonth:"This month", allTime:"All time", months:"months",
     myCircle:"My circle", locked:"Ranks appear from day {n}",
     setTargets:"Set this month's targets",
@@ -766,7 +767,7 @@ var T = {
     newPw:"New password", savePw:"Save password",
     mustChange:"Change your password first.",
     logout:"Sign out",
-    backfillWarn:"This is not today. A late entry earns no consistency credit and still takes the penalty.",
+    backfillWarn:"This entry is past its due date. The business numbers will count, but it remains late, earns no consistency credit and keeps the penalty.",
     pickDate:"Another date", continueBtn:"Continue", close:"Close",
     account:"Account", language:"Language",
     errAuth:"That username or password is wrong.",
@@ -818,8 +819,8 @@ var HELP_GUIDE = {
     title:"How this game works",
     subtitle:"Daily entry, score, penalties and ranking",
     intro:"Your score is based on how much of your approved target you achieve — not only on the rupee amount.",
-    fillTitle:"How to fill today’s entry",
-    fillText:"Enter today’s Customers, Bills and Revenue, then tap Save. Submit on the same day to protect your consistency score. Submitting again for the same date edits that day instead of creating a duplicate.",
+    fillTitle:"How to fill the daily entry",
+    fillText:"Each day, enter the previous day’s Customers, Bills and Revenue. The business date shown on screen is due today. Submit by the end of today to stay on time. Submitting again for the same date edits that day instead of creating a duplicate.",
     scoreTitle:"How your score increases",
     scoreText:"The system compares your achievement with the target expected up to today. Reaching 90% of the expected target gives about 90% achievement for that metric. Each metric is capped at 120%.",
     formula:"Achievement % = Actual ÷ Expected target up to today × 100",
@@ -830,9 +831,9 @@ var HELP_GUIDE = {
     increaseTitle:"Best ways to increase points",
     increaseText:"Achieve the approved revenue target, improve average bill value, increase bills and customers, and submit every day on time.",
     negativeTitle:"How points become negative",
-    negativeText:"A missed day deducts 2 points by default. A late/backfilled entry adds the business numbers, but normally gives no consistency credit and the missed-day penalty remains.",
+    negativeText:"A business date is due the next day. If it is still missing after that due date, 2 points are deducted by default. A later entry adds the business numbers, but normally gives no consistency credit and the penalty remains.",
     closedTitle:"What happens on a closed day",
-    closedText:"Mark Shop Closed only on the same day. It protects you from that day’s missed-entry penalty, but the monthly target does not reduce. The default limit is 4 closed days per cycle.",
+    closedText:"For the business date due today, use Shop Closed when the shop was genuinely closed. It protects that date from the missed-entry penalty, but the monthly target does not reduce. The default limit is 4 closed days per cycle.",
     rankTitle:"How ranking is decided",
     rankText:"Final points = weighted achievement − missed-day penalties. The highest final points become Rank 1 in the circle and overall. Equal scores share the same rank.",
     good:"Score goes up: better target achievement + better average bill + daily on-time entry.",
@@ -844,8 +845,8 @@ var HELP_GUIDE = {
     title:"ഈ ഗെയിം എങ്ങനെ പ്രവർത്തിക്കുന്നു",
     subtitle:"ദിവസേന എൻട്രി, സ്കോർ, പിഴ, റാങ്കിംഗ്",
     intro:"സ്കോർ കണക്കാക്കുന്നത് രൂപയുടെ വലുപ്പം മാത്രം നോക്കിയല്ല. അഡ്മിൻ അംഗീകരിച്ച ടാർഗറ്റിൽ എത്ര ശതമാനം നേടി എന്നതാണ് പ്രധാന്യം.",
-    fillTitle:"ഇന്നത്തെ കണക്ക് എങ്ങനെ ചേർക്കാം",
-    fillText:"ഇന്നത്തെ Customers, Bills, Revenue ചേർത്ത് Save അമർത്തുക. Consistency സംരക്ഷിക്കാൻ അതേ ദിവസം തന്നെ സമർപ്പിക്കുക. അതേ തീയതിയിൽ വീണ്ടും സമർപ്പിച്ചാൽ duplicate ഉണ്ടാകാതെ പഴയ എൻട്രി update ചെയ്യും.",
+    fillTitle:"ഡെയിലി എൻട്രി എങ്ങനെ ചേർക്കാം",
+    fillText:"ഓരോ ദിവസവും മുൻ ദിവസത്തെ Customers, Bills, Revenue ചേർക്കുക. സ്ക്രീനിൽ കാണുന്ന business date ഇന്ന് due ആണ്. ഇന്ന് അവസാനിക്കുന്നതിന് മുമ്പ് submit ചെയ്താൽ on-time ആയി കണക്കാക്കും. അതേ തീയതിയിൽ വീണ്ടും submit ചെയ്താൽ duplicate ഉണ്ടാകാതെ പഴയ entry update ചെയ്യും.",
     scoreTitle:"സ്കോർ എങ്ങനെ കൂടും",
     scoreText:"ഇന്നുവരെ നേടേണ്ട ടാർഗറ്റുമായി നിങ്ങളുടെ നേട്ടം താരതമ്യം ചെയ്യും. ഇന്നുവരെ വേണ്ട ടാർഗറ്റിന്റെ 90% നേടിയാൽ ആ metric-ന് ഏകദേശം 90% achievement ലഭിക്കും. ഓരോ metric-നും പരമാവധി 120% cap ഉണ്ട്.",
     formula:"Achievement % = Actual ÷ ഇന്നുവരെ വേണ്ട ടാർഗറ്റ് × 100",
@@ -856,9 +857,9 @@ var HELP_GUIDE = {
     increaseTitle:"പോയിന്റ് കൂട്ടാനുള്ള മികച്ച മാർഗങ്ങൾ",
     increaseText:"Approved revenue target നേടുക, average bill value കൂട്ടുക, bills-ഉം customers-ഉം കൂട്ടുക, എല്ലാ ദിവസവും സമയത്ത് entry നൽകുക.",
     negativeTitle:"പോയിന്റ് എങ്ങനെ കുറയും",
-    negativeText:"Entry നൽകാത്ത ഓരോ ദിവസത്തിനും സാധാരണയായി 2 പോയിന്റ് കുറയും. വൈകി/backfill ചെയ്താൽ business numbers കൂട്ടിച്ചേർക്കും, പക്ഷേ സാധാരണ consistency credit കിട്ടില്ല; missed-day penalty തുടരുകയും ചെയ്യും.",
+    negativeText:"ഒരു business date-ന്റെ കണക്ക് അടുത്ത ദിവസം due ആണ്. ആ due date കഴിഞ്ഞിട്ടും entry ഇല്ലെങ്കിൽ സാധാരണയായി 2 പോയിന്റ് കുറയും. പിന്നീട് ചേർത്താൽ business numbers കണക്കിൽ വരും, പക്ഷേ consistency credit കിട്ടില്ല; penalty തുടരുകയും ചെയ്യും.",
     closedTitle:"Shop Closed നൽകിയാൽ എന്ത് സംഭവിക്കും",
-    closedText:"Shop Closed അതേ ദിവസം മാത്രം രേഖപ്പെടുത്തുക. ആ ദിവസത്തെ missed-entry penalty ഒഴിവാകും. പക്ഷേ monthly target കുറയില്ല. ഒരു cycle-ൽ default limit 4 closed days ആണ്.",
+    closedText:"ഇന്ന് due ആയിരിക്കുന്ന business date-ൽ shop ശരിക്കും അടച്ചിരുന്നെങ്കിൽ Shop Closed ഉപയോഗിക്കുക. ആ ദിവസത്തെ missed-entry penalty ഒഴിവാകും. പക്ഷേ monthly target കുറയില്ല. ഒരു cycle-ൽ default limit 4 closed days ആണ്.",
     rankTitle:"റാങ്ക് എങ്ങനെ തീരുമാനിക്കും",
     rankText:"Final points = weighted achievement − missed-day penalties. ഏറ്റവും കൂടുതൽ final points ഉള്ളയാൾ circle-ലും overall-ലും Rank 1 ആകും. ഒരേ score ആണെങ്കിൽ ഒരേ rank ലഭിക്കും.",
     good:"സ്കോർ കൂടും: മികച്ച target achievement + മികച്ച average bill + എല്ലാ ദിവസവും സമയത്ത് entry.",
@@ -1071,7 +1072,7 @@ function label(m){ return S.lang === 'ml' ? (m.label_ml || m.label_en) : m.label
 function renderTodayCard(){
   var d = S.data, te = d.today_entry;
   var closedLeft = d.settings.closed_days_cap - (d.score ? d.score.closed_days : 0);
-  var dateLine = prettyDate(d.cycle.today);
+  var dateLine = prettyDate(d.cycle.report_date || d.cycle.today);
 
   if (te && te.is_closed) {
     return '<div class="card today-card done">' +
@@ -1153,31 +1154,46 @@ function renderScoreCard(){
 /* --- SIGNATURE ELEMENT: the month strip -------------------------------- */
 function renderLedger(){
   var d = S.data;
-  var start = d.cycle.start, end = d.cycle.end, today = d.cycle.today;
+  var start = d.cycle.start;
+  var end = d.cycle.end;
+  var reportDate = d.cycle.report_date || d.cycle.today;
+  var disciplineStart = d.settings.discipline_start_date || start;
   var byDate = {};
+
   d.entries.forEach(function(e){ byDate[e.date] = e; });
 
   var cells = '', done = 0, total = 0, i = 0;
   var cursor = new Date(start + 'T00:00:00');
   var last = new Date(end + 'T00:00:00');
   var joinKey = d.user.join_date || start;
+  if (joinKey > disciplineStart) disciplineStart = joinKey;
 
   while (cursor <= last) {
     var key = cursor.toISOString().slice(0, 10);
     var dayNum = cursor.getDate();
     var cls = 'day';
-    if (key > today) cls += ' future';
-    else if (key < joinKey) cls += ' future';
-    else {
+    var e = byDate[key];
+
+    if (key > reportDate) {
+      cls += ' future';
+    } else if (key < disciplineStart) {
+      // Historical/pre-launch business data can still contribute to performance,
+      // but it is not part of the penalty/consistency streak.
+      cls += e ? (e.is_closed ? ' closed' : ' filled') : ' future';
+    } else {
       total++;
-      var e = byDate[key];
       if (e && e.is_closed) cls += ' closed';
       else if (e && e.is_backfill) { cls += ' late'; done++; }
       else if (e) { cls += ' filled'; done++; }
+      else if (key === reportDate) cls += ' due';
       else cls += ' missed';
     }
-    if (key === today) cls += ' today';
-    cells += '<div class="' + cls + '" style="animation-delay:' + (i * 12) + 'ms" title="' + key + '">' + dayNum + '</div>';
+
+    if (key === reportDate) cls += ' today';
+
+    cells += '<div class="' + cls + '" style="animation-delay:' +
+      (i * 12) + 'ms" title="' + key + '">' + dayNum + '</div>';
+
     i++;
     cursor.setDate(cursor.getDate() + 1);
   }
@@ -1188,6 +1204,7 @@ function renderLedger(){
     '<div class="days">' + cells + '</div>' +
     '<div class="legend">' +
       '<span><i style="background:var(--ink)"></i>' + esc(t('lgDone')) + '</span>' +
+      '<span><i style="background:#EEF5FF;border:1.5px solid #7AA7D9"></i>' + esc(t('lgDue')) + '</span>' +
       '<span><i style="background:#fff;border:1.5px solid var(--gold)"></i>' + esc(t('lgLate')) + '</span>' +
       '<span><i style="background:#fff;border:1.5px dashed var(--clay)"></i>' + esc(t('lgMissed')) + '</span>' +
       '<span><i style="background:var(--line)"></i>' + esc(t('lgClosed')) + '</span>' +
@@ -1231,7 +1248,7 @@ function submitToday(date){
   S.busy = true;
   var btn = $('saveBtn');
   if (btn) { btn.textContent = t('saving'); btn.disabled = true; }
-  api('submitEntry', { date: date || S.data.cycle.today, values: collectValues() })
+  api('submitEntry', { date: date || S.data.cycle.report_date, values: collectValues() })
     .then(function(){ S.busy = false; toast(t('savedToast'), 'ok'); load(); })
     .catch(function(e){
       S.busy = false;
@@ -1243,7 +1260,7 @@ function submitToday(date){
 function markClosed(){
   var cap = S.data.settings.closed_days_cap;
   sheet(t('closedTitle'), t('closedConfirm', { n: cap }), t('yes'), function(){
-    api('submitEntry', { date: S.data.cycle.today, is_closed: true })
+    api('submitEntry', { date: S.data.cycle.report_date, is_closed: true })
       .then(function(){ toast(t('closedToday'), 'ok'); load(); })
       .catch(function(e){ toast(friendly(e.message), 'err'); });
   });
@@ -1251,24 +1268,38 @@ function markClosed(){
 
 function openEntry(withDate, forDate){
   var d = S.data;
-  var date = forDate || d.cycle.today;
+  var reportDate = d.cycle.report_date || d.cycle.today;
+  var date = forDate || reportDate;
+
   if (withDate && !forDate) {
-    $('pageToday').innerHTML = '<div class="card today-card"><h2>' + esc(t('pickDate')) + '</h2>' +
-      '<p class="sub">' + esc(d.cycle.start) + ' → ' + esc(d.cycle.today) + '</p>' +
-      '<div class="field"><input id="pickDate" type="date" value="' + d.cycle.today +
-        '" min="' + d.cycle.start + '" max="' + d.cycle.today + '"></div>' +
-      '<button class="btn gold" onclick="openEntry(true, document.getElementById(\'pickDate\').value)">' + esc(t('continueBtn')) + '</button>' +
-      '<div class="btn-row"><button class="btn ghost" onclick="render()">' + esc(t('close')) + '</button></div></div>';
+    $('pageToday').innerHTML =
+      '<div class="card today-card"><h2>' + esc(t('pickDate')) + '</h2>' +
+      '<p class="sub">' + esc(d.cycle.start) + ' → ' + esc(reportDate) + '</p>' +
+      '<div class="field"><input id="pickDate" type="date" value="' + reportDate +
+        '" min="' + d.cycle.start + '" max="' + reportDate + '"></div>' +
+      '<button class="btn gold" onclick="openEntry(true, document.getElementById(\'pickDate\').value)">' +
+        esc(t('continueBtn')) + '</button>' +
+      '<div class="btn-row"><button class="btn ghost" onclick="render()">' +
+        esc(t('close')) + '</button></div></div>';
     return;
   }
+
   var te = (d.entries.filter(function(e){ return e.date === date; })[0] || {}).payload || {};
-  var fields = inputMetrics().map(function(m){ return fieldHTML(m, te[m.metric_key] || 0); }).join('');
-  $('pageToday').innerHTML = '<div class="card today-card"><h2>' + esc(t('todayNumbers')) + '</h2>' +
+  var fields = inputMetrics().map(function(m){
+    return fieldHTML(m, te[m.metric_key] || 0);
+  }).join('');
+
+  $('pageToday').innerHTML =
+    '<div class="card today-card"><h2>' + esc(t('todayNumbers')) + '</h2>' +
     '<p class="sub">' + esc(prettyDate(date)) + '</p>' +
-    (date !== d.cycle.today ? '<div class="msg warn"><span>⚠</span><span>' + esc(t('backfillWarn')) + '</span></div>' : '') +
+    (date !== reportDate
+      ? '<div class="msg warn"><span>⚠</span><span>' + esc(t('backfillWarn')) + '</span></div>'
+      : '') +
     fields +
-    '<button class="btn gold" id="saveBtn" onclick="submitToday(\'' + date + '\')">' + esc(t('saveToday')) + '</button>' +
-    '<div class="btn-row"><button class="btn ghost" onclick="render()">' + esc(t('close')) + '</button></div></div>';
+    '<button class="btn gold" id="saveBtn" onclick="submitToday(\'' + date + '\')">' +
+      esc(t('saveToday')) + '</button>' +
+    '<div class="btn-row"><button class="btn ghost" onclick="render()">' +
+      esc(t('close')) + '</button></div></div>';
 }
 
 /* ========================== targets ========================== */
@@ -1331,44 +1362,56 @@ function renderBoard(){
   var html = '';
 
   if (b.locked) {
-    html += '<div class="card"><div class="empty"><span class="big">🔒</span>' + esc(t('locked', { n: b.unlock_day })) + '</div></div>';
+    html += '<div class="card"><div class="empty"><span class="big">🔒</span>' +
+      esc(t('locked', { n: b.unlock_day })) + '</div></div>';
     $('pageBoard').innerHTML = html;
     return;
   }
 
-  if (b.champion) {
-    html += '<div class="champion"><h2>' + esc(t('champion')) + '</h2>' +
-      '<b>' + esc(b.champion.name) + '</b>' +
-      '<span class="cspan">' + esc(b.champion.business_name) + ' · ' + esc(circleLabel_(b.champion.circle_key)) + '</span>' +
-      '<div class="pts">' + Math.round(b.champion.total_points) + '<em>' + esc(t('points')) + '</em></div></div>';
+  // Overall Top 3 appears only from the configured unlock date
+  // (20 August 2026 for this launch).
+  if (b.overall_top3_visible && b.overall_top3 && b.overall_top3.length) {
+    html += '<div class="card"><h2>' + esc(t('overallTop3')) + '</h2>';
+
+    b.overall_top3.slice(0, 3).forEach(function(r, i){
+      var rank = r.overall_rank || (i + 1);
+      html += '<div class="lb-row r' + (rank <= 3 ? rank : 'x') +
+        (r.user_id === me ? ' me' : '') + '">' +
+        '<span class="lb-rank">' + rank + '</span>' +
+        '<span class="lb-name"><b>' + esc(r.name) + '</b><span>' +
+          esc(r.business_name) + ' · ' + esc(circleLabel_(r.circle_key)) +
+        '</span></span>' +
+        '<span class="lb-pts">' + Math.round(r.total_points) + '</span></div>';
+    });
+
+    html += '</div>';
   }
 
+  // Owners receive only their own circle from the API.
   b.circles.forEach(function(c){
-    var name = circleLabel_(S.lang === 'ml' ? (c.name_ml || c.name_en) : c.name_en);
+    var name = circleLabel_(S.lang === 'ml'
+      ? (c.name_ml || c.name_en)
+      : c.name_en);
+
     html += '<div class="card"><h2>' + esc(name) + '</h2>';
-    if (!c.rows.length) { html += '<div class="empty">—</div></div>'; return; }
+
+    if (!c.rows.length) {
+      html += '<div class="empty">—</div></div>';
+      return;
+    }
+
     c.rows.forEach(function(r, i){
       var rank = r.circle_rank || (i + 1);
-      html += '<div class="lb-row r' + (rank <= 3 ? rank : 'x') + (r.user_id === me ? ' me' : '') + '">' +
+      html += '<div class="lb-row r' + (rank <= 3 ? rank : 'x') +
+        (r.user_id === me ? ' me' : '') + '">' +
         '<span class="lb-rank">' + rank + '</span>' +
-        '<span class="lb-name"><b>' + esc(r.name) + '</b><span>' + esc(r.business_name) + '</span></span>' +
+        '<span class="lb-name"><b>' + esc(r.name) + '</b><span>' +
+          esc(r.business_name) + '</span></span>' +
         '<span class="lb-pts">' + Math.round(r.total_points) + '</span></div>';
     });
+
     html += '</div>';
   });
-
-  if (b.all_time && b.all_time.length) {
-    html += '<div class="card"><h2>' + esc(t('allTime')) + '</h2>';
-    b.all_time.slice(0, 10).forEach(function(r, i){
-      var rank = i + 1;
-      html += '<div class="lb-row r' + (rank <= 3 ? rank : 'x') + (r.user_id === me ? ' me' : '') + '">' +
-        '<span class="lb-rank">' + rank + '</span>' +
-        '<span class="lb-name"><b>' + esc(r.name) + '</b><span>' + esc(circleLabel_(r.circle_key)) +
-          ' · ' + r.cycles + ' ' + esc(t('months')) + '</span></span>' +
-        '<span class="lb-pts">' + Math.round(r.total_points) + '</span></div>';
-    });
-    html += '</div>';
-  }
 
   $('pageBoard').innerHTML = html;
 }
