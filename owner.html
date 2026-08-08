@@ -762,7 +762,7 @@ var T = {
     submitTargets:"Send targets for approval",
     targetsPending:"Targets are waiting for admin approval.",
     targetsRejected:"Targets were not approved. Set them again.",
-    noCycle:"No cycle is running yet. The admin will let you know when it starts.",
+    noCycle:"No cycle is running yet. The admin will let you know when it starts.", launchTitle:"Daily Reporting Opens Soon", launchText:"The first live entry is the 10 August business numbers, due on 11 August.", standingsStart:"Circle standings will open on {date}.",
     changePw:"Set a new password", currentPw:"Current password",
     newPw:"New password", savePw:"Save password",
     mustChange:"Change your password first.",
@@ -1045,6 +1045,19 @@ function render(){
   var approved = d.targets.filter(function(x){ return x.status === 'APPROVED'; });
   if (!approved.length) return renderTargets();
 
+  // Launch guard: daily entry starts only when the first live business date
+  // becomes due. For the August launch, Aug 10 numbers become due on Aug 11.
+  if (!d.settings.daily_entry_open) {
+    $('pageToday').innerHTML =
+      '<div class="card"><div class="empty"><span class="big">◷</span>' +
+      '<div style="font-weight:800;font-size:19px;margin-bottom:7px">' + esc(t('launchTitle')) + '</div>' +
+      '<div style="max-width:420px;margin:0 auto">' + esc(t('launchText')) + '</div>' +
+      '<div style="margin-top:12px;font-weight:700">' +
+        esc(prettyDate(d.settings.first_live_due_date)) +
+      '</div></div></div>';
+    return;
+  }
+
   var html = '';
   html += renderTodayCard();
   html += renderScoreCard();
@@ -1130,7 +1143,8 @@ function renderScoreCard(){
 
   var rankBits = '';
   if (s.circle_rank) rankBits += '<span class="pill rank"><b>#' + s.circle_rank + '</b> ' + esc(t('rankCircle')) + '</span>';
-  if (s.overall_rank) rankBits += '<span class="pill"><b>#' + s.overall_rank + '</b> ' + esc(t('rankOverall')) + '</span>';
+  // Overall rank is intentionally hidden from the owner dashboard.
+  // From Aug 20, only the public Overall Top 3 appears in Standings.
   if (s.penalty_points > 0) rankBits += '<span class="pill bad"><b>−' + s.penalty_points + '</b> ' + esc(t('penalty')) + '</span>';
   if (!rankBits) rankBits = '<span class="pill good"><b>' + s.entered_days + '</b> ' + esc(t('enteredDays')) + '</span>';
 
@@ -1363,7 +1377,7 @@ function renderBoard(){
 
   if (b.locked) {
     html += '<div class="card"><div class="empty"><span class="big">🔒</span>' +
-      esc(t('locked', { n: b.unlock_day })) + '</div></div>';
+      esc(t('standingsStart', { date: prettyDate(b.unlock_date) })) + '</div></div>';
     $('pageBoard').innerHTML = html;
     return;
   }
